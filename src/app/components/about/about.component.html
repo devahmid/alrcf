@@ -1,0 +1,189 @@
+<!-- Hero Section -->
+<section class="about-hero">
+  <div class="container">
+    <div class="row align-items-center min-vh-50">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <h1 class="hero-title">À Propos de l'ALRCF</h1>
+        <p class="hero-subtitle">Découvrez notre histoire, nos valeurs et notre engagement</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission & Vision Section -->
+<section class="mission-vision-section section-padding">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="content-block">
+          <h2 class="section-title">{{ missionData.title }}</h2>
+          <p class="content-text">{{ missionData.description }}</p>
+          <div class="highlight-box">
+            <i class="fas fa-quote-left"></i>
+            <p>"Ensemble, nous construisons un avenir meilleur pour tous"</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="image-block">
+          <img src="assets/images/mission-illustration.svg" alt="Notre Mission" class="img-fluid">
+        </div>
+      </div>
+    </div>
+    
+    <div class="row align-items-center">
+      <div class="col-lg-6 order-lg-2" data-aos="fade-left">
+        <div class="content-block">
+          <h2 class="section-title">{{ visionData.title }}</h2>
+          <p class="content-text">{{ visionData.description }}</p>
+          <ul class="vision-list">
+            <li><i class="fas fa-check"></i> Respect des droits fondamentaux</li>
+            <li><i class="fas fa-check"></i> Égalité des chances pour tous</li>
+            <li><i class="fas fa-check"></i> Solidarité et entraide</li>
+            <li><i class="fas fa-check"></i> Protection de l'environnement</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6 order-lg-1" data-aos="fade-right">
+        <div class="image-block">
+          <img src="assets/images/vision-illustration.svg" alt="Notre Vision" class="img-fluid">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values Section -->
+<section class="values-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Nos Valeurs</h2>
+        <p class="section-subtitle">Les principes qui guident chacune de nos actions</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let value of values; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 150">
+        <div class="value-card">
+          <div class="value-icon" [ngClass]="'icon-' + value.color">
+            <i [class]="value.icon"></i>
+          </div>
+          <h4 class="value-title">{{ value.title }}</h4>
+          <p class="value-description">{{ value.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- History Section -->
+<section class="history-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Notre Histoire</h2>
+        <p class="section-subtitle">Un parcours marqué par l'engagement et la détermination</p>
+      </div>
+    </div>
+    
+    <div class="timeline">
+      <div class="timeline-item" *ngFor="let event of history; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 200">
+        <div class="timeline-marker">
+          <i [class]="event.icon"></i>
+        </div>
+        <div class="timeline-content">
+          <div class="timeline-year">{{ event.year }}</div>
+          <h4 class="timeline-title">{{ event.title }}</h4>
+          <p class="timeline-description">{{ event.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Notre Équipe</h2>
+        <p class="section-subtitle">Des professionnels engagés au service de notre cause</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let member of teamMembers; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 150">
+        <div class="team-card">
+          <div class="team-image">
+            <img [src]="member.image" [alt]="member.name" class="img-fluid">
+            <div class="team-overlay">
+              <div class="social-links">
+                <a [href]="member.social.linkedin" target="_blank">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                <a [href]="member.social.twitter" target="_blank">
+                  <i class="fab fa-twitter"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="team-content">
+            <h4 class="team-name">{{ member.name }}</h4>
+            <p class="team-position">{{ member.position }}</p>
+            <p class="team-description">{{ member.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title text-white">Nos Réalisations</h2>
+        <p class="section-subtitle text-white">Des chiffres qui témoignent de notre impact</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let stat of stats; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i [class]="stat.icon"></i>
+          </div>
+          <div class="stat-number">{{ stat.number }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <div class="cta-content">
+          <h2 class="cta-title">Rejoignez Notre Mission</h2>
+          <p class="cta-description">
+            Devenez membre de l'ALRCF et participez à la construction d'un monde plus juste et solidaire.
+            Votre engagement fait la différence.
+          </p>
+          <div class="cta-buttons">
+            <button class="btn btn-custom btn-lg me-3" routerLink="/connexion">
+              <i class="fas fa-user-plus me-2"></i>Devenir Membre
+            </button>
+            <button class="btn btn-outline-custom btn-lg" routerLink="/contact">
+              <i class="fas fa-envelope me-2"></i>Nous Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

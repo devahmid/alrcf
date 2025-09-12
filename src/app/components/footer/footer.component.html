@@ -1,0 +1,99 @@
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <!-- Association Info -->
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+        <div class="footer-section">
+          <div class="footer-logo">
+            <i class="fas fa-users"></i>
+            <h4>{{ footerData.association.name }}</h4>
+          </div>
+          <p class="footer-description">{{ footerData.association.description }}</p>
+          
+          <div class="footer-contact">
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ footerData.association.address }}</span>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <a href="tel:{{ footerData.association.phone }}">{{ footerData.association.phone }}</a>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:{{ footerData.association.email }}">{{ footerData.association.email }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Quick Links -->
+      <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="footer-section">
+          <h5 class="footer-title">Liens Rapides</h5>
+          <ul class="footer-links">
+            <li *ngFor="let link of footerData.quickLinks">
+              <a [routerLink]="link.route">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Legal -->
+      <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="footer-section">
+          <h5 class="footer-title">Légal</h5>
+          <ul class="footer-links">
+            <li *ngFor="let link of footerData.legal">
+              <a [routerLink]="link.route">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Social & Newsletter -->
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="footer-section">
+          <h5 class="footer-title">Suivez-nous</h5>
+          <div class="social-links">
+            <a *ngFor="let social of footerData.social" 
+               [href]="social.url" 
+               target="_blank" 
+               [title]="social.name"
+               class="social-link">
+              <i [class]="social.icon"></i>
+            </a>
+          </div>
+          
+          <div class="newsletter">
+            <h6>Newsletter</h6>
+            <p>Restez informé de nos actualités</p>
+            <div class="newsletter-form">
+              <input type="email" placeholder="Votre email" class="form-control">
+              <button class="btn btn-custom btn-sm">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="copyright">
+            © {{ currentYear }} {{ footerData.association.name }}. Tous droits réservés.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <button class="btn btn-outline-light btn-sm" (click)="scrollToTop()">
+            <i class="fas fa-arrow-up me-1"></i>Retour en haut
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

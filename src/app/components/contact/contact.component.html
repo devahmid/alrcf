@@ -1,0 +1,291 @@
+<!-- Hero Section -->
+<section class="contact-hero">
+  <div class="container">
+    <div class="row align-items-center min-vh-50">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <h1 class="hero-title">Contactez-Nous</h1>
+        <p class="hero-subtitle">Nous sommes là pour répondre à vos questions et vous accompagner</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="contact-form-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Envoyez-nous un Message</h2>
+        <p class="section-subtitle">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement</p>
+      </div>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="contact-form-container" data-aos="fade-up">
+          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Nom complet *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('name')"
+                  id="name" 
+                  formControlName="name"
+                  placeholder="Votre nom complet">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('name')">
+                  {{ getFieldError('name') }}
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email *</label>
+                <input 
+                  type="email" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('email')"
+                  id="email" 
+                  formControlName="email"
+                  placeholder="votre@email.com">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                  {{ getFieldError('email') }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Téléphone</label>
+                <input 
+                  type="tel" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('phone')"
+                  id="phone" 
+                  formControlName="phone"
+                  placeholder="+33 1 23 45 67 89">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('phone')">
+                  {{ getFieldError('phone') }}
+                </div>
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="subject" class="form-label">Sujet *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('subject')"
+                  id="subject" 
+                  formControlName="subject"
+                  placeholder="Sujet de votre message">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('subject')">
+                  {{ getFieldError('subject') }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="message" class="form-label">Message *</label>
+              <textarea 
+                class="form-control form-control-custom" 
+                [class.is-invalid]="isFieldInvalid('message')"
+                id="message" 
+                formControlName="message"
+                rows="6"
+                placeholder="Décrivez votre demande en détail..."></textarea>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('message')">
+                {{ getFieldError('message') }}
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="consent"
+                  formControlName="consent"
+                  [class.is-invalid]="isFieldInvalid('consent')">
+                <label class="form-check-label" for="consent">
+                  J'accepte que mes données personnelles soient utilisées pour traiter ma demande *
+                </label>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('consent')">
+                  Vous devez accepter l'utilisation de vos données
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-center">
+              <button 
+                type="submit" 
+                class="btn btn-custom btn-lg"
+                [disabled]="isSubmitting">
+                <span *ngIf="!isSubmitting">
+                  <i class="fas fa-paper-plane me-2"></i>Envoyer le Message
+                </span>
+                <span *ngIf="isSubmitting">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Envoi en cours...
+                </span>
+              </button>
+            </div>
+            
+            <div class="mt-4" *ngIf="submitMessage">
+              <div class="alert" [ngClass]="submitSuccess ? 'alert-success-custom' : 'alert-danger-custom'">
+                <i class="fas" [ngClass]="submitSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+                {{ submitMessage }}
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="contact-info-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Nos Coordonnées</h2>
+        <p class="section-subtitle">Plusieurs façons de nous contacter</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+        <div class="contact-card">
+          <div class="contact-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h4 class="contact-title">Adresse</h4>
+          <p class="contact-text">{{ contactInfo.address }}</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="contact-card">
+          <div class="contact-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <h4 class="contact-title">Téléphone</h4>
+          <p class="contact-text">
+            <a href="tel:{{ contactInfo.phone }}">{{ contactInfo.phone }}</a>
+          </p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="contact-card">
+          <div class="contact-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h4 class="contact-title">Email</h4>
+          <p class="contact-text">
+            <a href="mailto:{{ contactInfo.email }}">{{ contactInfo.email }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <div class="hours-info">
+          <h4>Horaires d'ouverture</h4>
+          <p>{{ contactInfo.hours }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Offices Section -->
+<section class="offices-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Nos Antennes</h2>
+        <p class="section-subtitle">Retrouvez-nous dans plusieurs villes de France</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let office of offices; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 150">
+        <div class="office-card">
+          <div class="office-header">
+            <h4 class="office-city">{{ office.city }}</h4>
+            <div class="office-status">
+              <span class="status-dot"></span>
+              Ouvert
+            </div>
+          </div>
+          <div class="office-content">
+            <div class="office-info">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ office.address }}</span>
+            </div>
+            <div class="office-info">
+              <i class="fas fa-phone"></i>
+              <a href="tel:{{ office.phone }}">{{ office.phone }}</a>
+            </div>
+            <div class="office-info">
+              <i class="fas fa-envelope"></i>
+              <a href="mailto:{{ office.email }}">{{ office.email }}</a>
+            </div>
+            <div class="office-info">
+              <i class="fas fa-clock"></i>
+              <span>{{ office.hours }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Questions Fréquentes</h2>
+        <p class="section-subtitle">Trouvez des réponses aux questions les plus courantes</p>
+      </div>
+    </div>
+    
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="faq-container">
+          <div class="faq-item" *ngFor="let faq of faqs; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+            <div class="faq-question">
+              <div class="faq-icon">
+                <i [class]="faq.icon"></i>
+              </div>
+              <h4>{{ faq.question }}</h4>
+            </div>
+            <div class="faq-answer">
+              <p>{{ faq.answer }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section">
+  <div class="container-fluid p-0">
+    <div class="map-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9914406081495!2d2.292292515674231!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1234567890123!5m2!1sfr!2sfr"
+        width="100%" 
+        height="400" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
+</section>

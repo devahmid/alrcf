@@ -1,0 +1,825 @@
+<!-- Admin Header -->
+<section class="admin-header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <h1 class="header-title">Espace Administration</h1>
+        <p class="header-subtitle">Gestion de l'association ALRCF</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Navigation Tabs -->
+<section class="tabs-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="tabs-container" data-aos="fade-up">
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'dashboard'"
+            (click)="setActiveTab('dashboard')">
+            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'adherents'"
+            (click)="setActiveTab('adherents')">
+            <i class="fas fa-users me-2"></i>Adhérents
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'news'"
+            (click)="setActiveTab('news')">
+            <i class="fas fa-newspaper me-2"></i>Actualités
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'events'"
+            (click)="setActiveTab('events')">
+            <i class="fas fa-calendar me-2"></i>Événements
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'messages'"
+            (click)="setActiveTab('messages')">
+            <i class="fas fa-envelope me-2"></i>Messages
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'reports'"
+            (click)="setActiveTab('reports')">
+            <i class="fas fa-exclamation-triangle me-2"></i>Signalements
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'subscriptions'"
+            (click)="setActiveTab('subscriptions')">
+            <i class="fas fa-credit-card me-2"></i>Cotisations
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Cards -->
+<section class="stats-section" *ngIf="activeTab === 'dashboard'">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.totalAdherents }}</div>
+            <div class="stat-label">Adhérents</div>
+            <div class="stat-subtitle">{{ stats.activeAdherents }} actifs</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-newspaper"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.totalNews }}</div>
+            <div class="stat-label">Actualités</div>
+            <div class="stat-subtitle">Publiées</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.totalEvents }}</div>
+            <div class="stat-label">Événements</div>
+            <div class="stat-subtitle">Programmés</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-euro-sign"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.monthlyRevenue }}€</div>
+            <div class="stat-label">Revenus</div>
+            <div class="stat-subtitle">Ce mois</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.pendingMessages }}</div>
+            <div class="stat-label">Messages</div>
+            <div class="stat-subtitle">En attente</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.pendingReports }}</div>
+            <div class="stat-label">Signalements</div>
+            <div class="stat-subtitle">En attente</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.totalSubscriptions }}</div>
+            <div class="stat-label">Cotisations</div>
+            <div class="stat-subtitle">Total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tab Content -->
+<section class="tab-content-section section-padding">
+  <div class="container">
+    
+    <!-- Dashboard Tab -->
+    <div *ngIf="activeTab === 'dashboard'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="dashboard-widget">
+            <h3>Activité Récente</h3>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="activity-content">
+                  <h5>Nouvel adhérent</h5>
+                  <p>Marie Dupont s'est inscrite</p>
+                  <span class="activity-time">Il y a 2 heures</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="activity-content">
+                  <h5>Nouveau message</h5>
+                  <p>Message de Jean Martin</p>
+                  <span class="activity-time">Il y a 4 heures</span>
+                </div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">
+                  <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="activity-content">
+                  <h5>Nouvelle cotisation</h5>
+                  <p>Paiement de 50€ reçu</p>
+                  <span class="activity-time">Il y a 6 heures</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="dashboard-widget">
+            <h3>Actions Rapides</h3>
+            <div class="quick-actions">
+              <button class="btn btn-custom btn-sm w-100 mb-2" (click)="setActiveTab('adherents')">
+                <i class="fas fa-user-plus me-2"></i>Ajouter un adhérent
+              </button>
+              <button class="btn btn-custom btn-sm w-100 mb-2" (click)="setActiveTab('news')">
+                <i class="fas fa-newspaper me-2"></i>Créer une actualité
+              </button>
+              <button class="btn btn-custom btn-sm w-100 mb-2" (click)="setActiveTab('events')">
+                <i class="fas fa-calendar me-2"></i>Créer un événement
+              </button>
+              <button class="btn btn-custom btn-sm w-100 mb-2" (click)="setActiveTab('messages')">
+                <i class="fas fa-envelope me-2"></i>Voir les messages
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Adherents Tab -->
+    <div *ngIf="activeTab === 'adherents'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Adhérents</h3>
+              <div class="data-filters">
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Rechercher..."
+                  [(ngModel)]="searchTerm">
+                <select class="form-control" [(ngModel)]="statusFilter">
+                  <option value="all">Tous les statuts</option>
+                  <option value="active">Actifs</option>
+                  <option value="inactive">Inactifs</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="data-table">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let adherent of getPaginatedData()">
+                    <td>{{ adherent.firstName }} {{ adherent.lastName }}</td>
+                    <td>{{ adherent.email }}</td>
+                    <td>
+                      <span class="status-badge" [ngClass]="getStatusClass(adherent.isActive ? 'active' : 'inactive')">
+                        {{ adherent.isActive ? 'Actif' : 'Inactif' }}
+                      </span>
+                    </td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-primary me-1">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div class="pagination" *ngIf="getTotalPages() > 1">
+              <button 
+                class="btn btn-outline-primary" 
+                [disabled]="currentPage === 1"
+                (click)="onPageChange(currentPage - 1)">
+                Précédent
+              </button>
+              <span class="page-info">
+                Page {{ currentPage }} sur {{ getTotalPages() }}
+              </span>
+              <button 
+                class="btn btn-outline-primary" 
+                [disabled]="currentPage === getTotalPages()"
+                (click)="onPageChange(currentPage + 1)">
+                Suivant
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="form-container">
+            <h4>Ajouter un Adhérent</h4>
+            <form [formGroup]="adherentForm" (ngSubmit)="onAdherentSubmit()">
+              <div class="mb-3">
+                <label for="firstName" class="form-label">Prénom *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(adherentForm, 'firstName')"
+                  id="firstName" 
+                  formControlName="firstName">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'firstName')">
+                  {{ getFieldError(adherentForm, 'firstName') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="lastName" class="form-label">Nom *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(adherentForm, 'lastName')"
+                  id="lastName" 
+                  formControlName="lastName">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'lastName')">
+                  {{ getFieldError(adherentForm, 'lastName') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="email" class="form-label">Email *</label>
+                <input 
+                  type="email" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(adherentForm, 'email')"
+                  id="email" 
+                  formControlName="email">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'email')">
+                  {{ getFieldError(adherentForm, 'email') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="phone" class="form-label">Téléphone</label>
+                <input 
+                  type="tel" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(adherentForm, 'phone')"
+                  id="phone" 
+                  formControlName="phone">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'phone')">
+                  {{ getFieldError(adherentForm, 'phone') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="address" class="form-label">Adresse</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  id="address" 
+                  formControlName="address">
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="city" class="form-label">Ville</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    id="city" 
+                    formControlName="city">
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="postalCode" class="form-label">Code postal</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(adherentForm, 'postalCode')"
+                    id="postalCode" 
+                    formControlName="postalCode">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'postalCode')">
+                    {{ getFieldError(adherentForm, 'postalCode') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="isActive"
+                    formControlName="isActive">
+                  <label class="form-check-label" for="isActive">
+                    Adhérent actif
+                  </label>
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-custom w-100"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="fas fa-plus me-2"></i>Ajouter
+                </span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Ajout...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- News Tab -->
+    <div *ngIf="activeTab === 'news'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Actualités</h3>
+            </div>
+            
+            <div class="news-list">
+              <div class="news-card" *ngFor="let article of news" data-aos="fade-up">
+                <div class="news-content">
+                  <h4 class="news-title">{{ article.title }}</h4>
+                  <p class="news-excerpt">{{ article.content | slice:0:150 }}...</p>
+                  <div class="news-meta">
+                    <span class="news-category">{{ article.category }}</span>
+                    <span class="news-date">{{ formatDate(article.publishedAt) }}</span>
+                    <span class="news-status" [ngClass]="getStatusClass(article.isPublished ? 'active' : 'inactive')">
+                      {{ article.isPublished ? 'Publié' : 'Brouillon' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="news-actions">
+                  <button class="btn btn-sm btn-outline-primary me-1">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteItem('news', article.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="form-container">
+            <h4>Créer une Actualité</h4>
+            <form [formGroup]="newsForm" (ngSubmit)="onNewsSubmit()">
+              <div class="mb-3">
+                <label for="newsTitle" class="form-label">Titre *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(newsForm, 'title')"
+                  id="newsTitle" 
+                  formControlName="title">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(newsForm, 'title')">
+                  {{ getFieldError(newsForm, 'title') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="newsCategory" class="form-label">Catégorie *</label>
+                <select 
+                  class="form-control form-control-custom" 
+                  id="newsCategory" 
+                  formControlName="category">
+                  <option value="general">Général</option>
+                  <option value="event">Événement</option>
+                  <option value="announcement">Annonce</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="newsContent" class="form-label">Contenu *</label>
+                <textarea 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(newsForm, 'content')"
+                  id="newsContent" 
+                  formControlName="content"
+                  rows="6"
+                  placeholder="Contenu de l'actualité..."></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(newsForm, 'content')">
+                  {{ getFieldError(newsForm, 'content') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="isPublished"
+                    formControlName="isPublished">
+                  <label class="form-check-label" for="isPublished">
+                    Publier immédiatement
+                  </label>
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-custom w-100"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="fas fa-plus me-2"></i>Créer
+                </span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Création...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Events Tab -->
+    <div *ngIf="activeTab === 'events'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Événements</h3>
+            </div>
+            
+            <div class="events-list">
+              <div class="event-card" *ngFor="let event of events" data-aos="fade-up">
+                <div class="event-content">
+                  <h4 class="event-title">{{ event.title }}</h4>
+                  <p class="event-description">{{ event.description | slice:0:150 }}...</p>
+                  <div class="event-meta">
+                    <span class="event-date">{{ formatDate(event.startDate) }}</span>
+                    <span class="event-location">{{ event.location }}</span>
+                    <span class="event-participants" *ngIf="event.maxParticipants">
+                      {{ event.currentParticipants }}/{{ event.maxParticipants }} participants
+                    </span>
+                  </div>
+                </div>
+                <div class="event-actions">
+                  <button class="btn btn-sm btn-outline-primary me-1">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteItem('event', event.id)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="form-container">
+            <h4>Créer un Événement</h4>
+            <form [formGroup]="eventForm" (ngSubmit)="onEventSubmit()">
+              <div class="mb-3">
+                <label for="eventTitle" class="form-label">Titre *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(eventForm, 'title')"
+                  id="eventTitle" 
+                  formControlName="title">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'title')">
+                  {{ getFieldError(eventForm, 'title') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="eventDescription" class="form-label">Description *</label>
+                <textarea 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(eventForm, 'description')"
+                  id="eventDescription" 
+                  formControlName="description"
+                  rows="4"
+                  placeholder="Description de l'événement..."></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'description')">
+                  {{ getFieldError(eventForm, 'description') }}
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="eventStartDate" class="form-label">Date de début *</label>
+                  <input 
+                    type="datetime-local" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(eventForm, 'startDate')"
+                    id="eventStartDate" 
+                    formControlName="startDate">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'startDate')">
+                    {{ getFieldError(eventForm, 'startDate') }}
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="eventEndDate" class="form-label">Date de fin</label>
+                  <input 
+                    type="datetime-local" 
+                    class="form-control form-control-custom" 
+                    id="eventEndDate" 
+                    formControlName="endDate">
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="eventLocation" class="form-label">Lieu *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(eventForm, 'location')"
+                  id="eventLocation" 
+                  formControlName="location">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'location')">
+                  {{ getFieldError(eventForm, 'location') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="eventMaxParticipants" class="form-label">Participants max</label>
+                <input 
+                  type="number" 
+                  class="form-control form-control-custom" 
+                  id="eventMaxParticipants" 
+                  formControlName="maxParticipants">
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="registrationRequired"
+                    formControlName="registrationRequired">
+                  <label class="form-check-label" for="registrationRequired">
+                    Inscription requise
+                  </label>
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="eventPublished"
+                    formControlName="isPublished">
+                  <label class="form-check-label" for="eventPublished">
+                    Publier immédiatement
+                  </label>
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-custom w-100"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="fas fa-plus me-2"></i>Créer
+                </span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Création...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Messages Tab -->
+    <div *ngIf="activeTab === 'messages'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-12">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Messages</h3>
+            </div>
+            
+            <div class="messages-list">
+              <div class="message-card" *ngFor="let message of messages" data-aos="fade-up">
+                <div class="message-header">
+                  <h4 class="message-subject">{{ message.subject }}</h4>
+                  <div class="message-meta">
+                    <span class="message-status" [ngClass]="getStatusClass(message.status)">
+                      {{ message.status | titlecase }}
+                    </span>
+                    <span class="message-date">{{ formatDate(message.createdAt) }}</span>
+                  </div>
+                </div>
+                <div class="message-content">
+                  <p class="message-text">{{ message.message }}</p>
+                  <div class="message-info">
+                    <strong>De:</strong> {{ message.name }} ({{ message.email }})
+                  </div>
+                  <div class="message-actions">
+                    <button 
+                      class="btn btn-sm btn-outline-success me-1"
+                      (click)="updateMessageStatus(message.id, 'read')">
+                      <i class="fas fa-check me-1"></i>Marquer lu
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-primary me-1"
+                      (click)="updateMessageStatus(message.id, 'replied')">
+                      <i class="fas fa-reply me-1"></i>Répondre
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary"
+                      (click)="updateMessageStatus(message.id, 'closed')">
+                      <i class="fas fa-times me-1"></i>Fermer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reports Tab -->
+    <div *ngIf="activeTab === 'reports'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-12">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Signalements</h3>
+            </div>
+            
+            <div class="reports-list">
+              <div class="report-card" *ngFor="let report of reports" data-aos="fade-up">
+                <div class="report-header">
+                  <h4 class="report-title">{{ report.title }}</h4>
+                  <div class="report-meta">
+                    <span class="report-category">{{ report.category | titlecase }}</span>
+                    <span class="report-priority" [ngClass]="'priority-' + report.priority">
+                      {{ report.priority | titlecase }}
+                    </span>
+                    <span class="report-status" [ngClass]="getStatusClass(report.status)">
+                      {{ report.status | titlecase }}
+                    </span>
+                  </div>
+                </div>
+                <div class="report-content">
+                  <p class="report-description">{{ report.description }}</p>
+                  <div class="report-actions">
+                    <button 
+                      class="btn btn-sm btn-outline-primary me-1"
+                      (click)="updateReportStatus(report.id, 'in_progress')">
+                      <i class="fas fa-play me-1"></i>En cours
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-success me-1"
+                      (click)="updateReportStatus(report.id, 'resolved')">
+                      <i class="fas fa-check me-1"></i>Résolu
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary"
+                      (click)="updateReportStatus(report.id, 'closed')">
+                      <i class="fas fa-times me-1"></i>Fermer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Subscriptions Tab -->
+    <div *ngIf="activeTab === 'subscriptions'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-12">
+          <div class="data-container">
+            <div class="data-header">
+              <h3>Gestion des Cotisations</h3>
+            </div>
+            
+            <div class="subscriptions-list">
+              <div class="subscription-card" *ngFor="let subscription of subscriptions" data-aos="fade-up">
+                <div class="subscription-header">
+                  <div class="subscription-period">{{ subscription.period }}</div>
+                  <div class="subscription-status" [ngClass]="getStatusClass(subscription.status)">
+                    {{ subscription.status | titlecase }}
+                  </div>
+                </div>
+                <div class="subscription-content">
+                  <div class="subscription-amount">{{ subscription.amount }}€</div>
+                  <div class="subscription-date">{{ formatDate(subscription.paymentDate) }}</div>
+                  <div class="subscription-method">{{ subscription.paymentMethod | titlecase }}</div>
+                  <div class="subscription-reference" *ngIf="subscription.reference">
+                    Réf: {{ subscription.reference }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>

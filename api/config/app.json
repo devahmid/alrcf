@@ -1,0 +1,48 @@
+{
+  "app_name": "ALRCF Association",
+  "version": "1.0.0",
+  "description": "Application web pour la gestion d'une association",
+  "author": "Équipe ALRCF",
+  "license": "MIT",
+  "features": {
+    "user_management": true,
+    "news_management": true,
+    "event_management": true,
+    "contact_system": true,
+    "reporting_system": true,
+    "subscription_management": true,
+    "admin_panel": true
+  },
+  "security": {
+    "password_min_length": 6,
+    "session_timeout": 3600,
+    "max_login_attempts": 5,
+    "lockout_duration": 900
+  },
+  "email": {
+    "smtp_host": "localhost",
+    "smtp_port": 587,
+    "smtp_username": "",
+    "smtp_password": "",
+    "from_email": "noreply@alrcf.fr",
+    "from_name": "ALRCF Association"
+  },
+  "upload": {
+    "max_file_size": "10M",
+    "allowed_types": ["jpg", "jpeg", "png", "gif", "pdf", "doc", "docx"],
+    "upload_path": "../uploads/"
+  },
+  "backup": {
+    "enabled": true,
+    "frequency": "daily",
+    "retention_days": 30,
+    "backup_path": "../backups/"
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "log_path": "../logs/",
+    "max_file_size": "10M",
+    "max_files": 10
+  }
+}

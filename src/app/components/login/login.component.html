@@ -1,0 +1,203 @@
+<!-- Login Hero Section -->
+<section class="login-hero">
+  <div class="container">
+    <div class="row align-items-center min-vh-100">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <h1 class="hero-title">Connexion</h1>
+        <p class="hero-subtitle">Accédez à votre espace personnel</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Login Form Section -->
+<section class="login-form-section section-padding">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="login-container" data-aos="fade-up">
+          <div class="login-header">
+            <div class="login-logo">
+              <i class="fas fa-users"></i>
+            </div>
+            <h2 class="login-title">Connexion</h2>
+            <p class="login-subtitle">Connectez-vous à votre compte</p>
+          </div>
+          
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-group mb-3">
+              <label for="email" class="form-label">Email</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fas fa-envelope"></i>
+                </span>
+                <input 
+                  type="email" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('email')"
+                  id="email" 
+                  formControlName="email"
+                  placeholder="votre@email.com">
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
+                {{ getFieldError('email') }}
+              </div>
+            </div>
+            
+            <div class="form-group mb-3">
+              <label for="password" class="form-label">Mot de passe</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="fas fa-lock"></i>
+                </span>
+                <input 
+                  [type]="showPassword ? 'text' : 'password'"
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid('password')"
+                  id="password" 
+                  formControlName="password"
+                  placeholder="Votre mot de passe">
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary" 
+                  (click)="togglePasswordVisibility()">
+                  <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
+              </div>
+              <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
+                {{ getFieldError('password') }}
+              </div>
+            </div>
+            
+            <div class="form-group mb-4">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="checkbox" 
+                  id="rememberMe"
+                  formControlName="rememberMe">
+                <label class="form-check-label" for="rememberMe">
+                  Se souvenir de moi
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group mb-4" *ngIf="errorMessage">
+              <div class="alert alert-danger-custom">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                {{ errorMessage }}
+              </div>
+            </div>
+            
+            <div class="form-group mb-4">
+              <button 
+                type="submit" 
+                class="btn btn-custom btn-lg w-100"
+                [disabled]="isSubmitting">
+                <span *ngIf="!isSubmitting">
+                  <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                </span>
+                <span *ngIf="isSubmitting">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Connexion en cours...
+                </span>
+              </button>
+            </div>
+            
+            <div class="form-group text-center">
+              <a href="#" class="forgot-password-link">
+                <i class="fas fa-key me-1"></i>Mot de passe oublié ?
+              </a>
+            </div>
+          </form>
+          
+          <div class="login-footer">
+            <div class="divider">
+              <span>ou</span>
+            </div>
+            
+            <div class="register-link">
+              <p>Vous n'avez pas encore de compte ?</p>
+              <button class="btn btn-outline-custom" (click)="goToHome()">
+                <i class="fas fa-user-plus me-2"></i>Revenir à l'accueil
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="login-features-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Pourquoi se connecter ?</h2>
+        <p class="section-subtitle">Découvrez les avantages de votre espace personnel</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <h4 class="feature-title">Espace Personnel</h4>
+          <p class="feature-description">Accédez à vos informations personnelles et gérez votre profil en toute sécurité.</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h4 class="feature-title">Gestion des Cotisations</h4>
+          <p class="feature-description">Consultez l'historique de vos paiements et gérez vos cotisations en ligne.</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-calendar"></i>
+          </div>
+          <h4 class="feature-title">Événements</h4>
+          <p class="feature-description">Inscrivez-vous aux événements et restez informé de nos activités.</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h4 class="feature-title">Messages</h4>
+          <p class="feature-description">Communiquez directement avec l'équipe et les autres membres.</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h4 class="feature-title">Signalements</h4>
+          <p class="feature-description">Signalez des problèmes ou faites des suggestions pour améliorer nos services.</p>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-newspaper"></i>
+          </div>
+          <h4 class="feature-title">Actualités</h4>
+          <p class="feature-description">Recevez les dernières nouvelles et informations de l'association.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

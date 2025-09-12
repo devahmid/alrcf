@@ -1,0 +1,230 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-background">
+    <div class="hero-overlay"></div>
+    <div class="hero-particles"></div>
+  </div>
+  
+  <div class="container">
+    <div class="row align-items-center min-vh-100">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            <span class="title-line">{{ heroData.title }}</span>
+            <span class="title-highlight">{{ heroData.subtitle }}</span>
+          </h1>
+          <p class="hero-description">{{ heroData.description }}</p>
+          <div class="hero-buttons">
+            <button class="btn btn-custom btn-lg me-3" routerLink="/a-propos">
+              <i class="fas fa-info-circle me-2"></i>En savoir plus
+            </button>
+            <button class="btn btn-outline-custom btn-lg" routerLink="/contact">
+              <i class="fas fa-envelope me-2"></i>Nous contacter
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6" data-aos="fade-left">
+        <div class="hero-image">
+          <div class="image-container">
+            <img src="assets/images/hero-illustration.svg" alt="ALRCF Illustration" class="img-fluid">
+            <div class="floating-elements">
+              <div class="floating-icon icon-1">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="floating-icon icon-2">
+                <i class="fas fa-heart"></i>
+              </div>
+              <div class="floating-icon icon-3">
+                <i class="fas fa-balance-scale"></i>
+              </div>
+              <div class="floating-icon icon-4">
+                <i class="fas fa-handshake"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="scroll-indicator">
+    <div class="scroll-arrow">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Notre Impact</h2>
+        <p class="section-subtitle">Des chiffres qui témoignent de notre engagement</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let stat of stats; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 100">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i [class]="stat.icon"></i>
+          </div>
+          <div class="stat-number">{{ stat.number }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Nos Valeurs</h2>
+        <p class="section-subtitle">Les principes qui nous guident au quotidien</p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let feature of features; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 150">
+        <div class="feature-card">
+          <div class="feature-icon" [ngClass]="'icon-' + feature.color">
+            <i [class]="feature.icon"></i>
+          </div>
+          <h4 class="feature-title">{{ feature.title }}</h4>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- News Section -->
+<section class="news-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Actualités Récentes</h2>
+        <p class="section-subtitle">Restez informés de nos dernières activités</p>
+      </div>
+    </div>
+    
+    <div class="row" *ngIf="!isLoading">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let article of news; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 200">
+        <div class="news-card">
+          <div class="news-image" *ngIf="article.imageUrl">
+            <img [src]="article.imageUrl" [alt]="article.title" class="img-fluid">
+            <div class="news-category">{{ article.category }}</div>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-date">
+                <i class="fas fa-calendar me-1"></i>
+                {{ formatDate(article.publishedAt) }}
+              </span>
+              <span class="news-author">
+                <i class="fas fa-user me-1"></i>
+                {{ article.author }}
+              </span>
+            </div>
+            <h4 class="news-title">{{ article.title }}</h4>
+            <p class="news-excerpt">{{ article.content | slice:0:150 }}...</p>
+            <a href="#" class="news-link">Lire la suite <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row" *ngIf="isLoading">
+      <div class="col-12 text-center">
+        <div class="spinner"></div>
+        <p>Chargement des actualités...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Events Section -->
+<section class="events-section section-padding bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center mb-5" data-aos="fade-up">
+        <h2 class="section-title">Événements à Venir</h2>
+        <p class="section-subtitle">Rejoignez-nous lors de nos prochains événements</p>
+      </div>
+    </div>
+    
+    <div class="row" *ngIf="!isLoading">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of events; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 200">
+        <div class="event-card" [ngClass]="'status-' + getEventStatus(event)">
+          <div class="event-image" *ngIf="event.imageUrl">
+            <img [src]="event.imageUrl" [alt]="event.title" class="img-fluid">
+            <div class="event-status" [ngClass]="'status-' + getEventStatus(event)">
+              <span *ngIf="getEventStatus(event) === 'soon'">Bientôt</span>
+              <span *ngIf="getEventStatus(event) === 'upcoming'">À venir</span>
+              <span *ngIf="getEventStatus(event) === 'past'">Terminé</span>
+            </div>
+          </div>
+          <div class="event-content">
+            <div class="event-date">
+              <i class="fas fa-calendar-alt me-2"></i>
+              {{ formatDate(event.startDate) }}
+            </div>
+            <h4 class="event-title">{{ event.title }}</h4>
+            <p class="event-description">{{ event.description | slice:0:120 }}...</p>
+            <div class="event-meta">
+              <span class="event-location">
+                <i class="fas fa-map-marker-alt me-1"></i>
+                {{ event.location }}
+              </span>
+              <span class="event-participants" *ngIf="event.maxParticipants">
+                <i class="fas fa-users me-1"></i>
+                {{ event.currentParticipants }}/{{ event.maxParticipants }}
+              </span>
+            </div>
+            <button class="btn btn-custom btn-sm" *ngIf="getEventStatus(event) !== 'past'">
+              <i class="fas fa-plus me-1"></i>S'inscrire
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row" *ngIf="isLoading">
+      <div class="col-12 text-center">
+        <div class="spinner"></div>
+        <p>Chargement des événements...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section section-padding">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <div class="cta-content">
+          <h2 class="cta-title">Rejoignez Notre Association</h2>
+          <p class="cta-description">
+            Devenez membre de l'ALRCF et participez à la construction d'un monde plus juste et libre.
+            Ensemble, nous pouvons faire la différence.
+          </p>
+          <div class="cta-buttons">
+            <button class="btn btn-custom btn-lg me-3" routerLink="/connexion">
+              <i class="fas fa-user-plus me-2"></i>Devenir Membre
+            </button>
+            <button class="btn btn-outline-custom btn-lg" routerLink="/contact">
+              <i class="fas fa-envelope me-2"></i>Nous Contacter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

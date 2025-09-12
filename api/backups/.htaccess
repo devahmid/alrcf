@@ -1,0 +1,3 @@
+# Désactiver l'accès direct aux fichiers de sauvegarde
+Order Deny,Allow
+Deny from all

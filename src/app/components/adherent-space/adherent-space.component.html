@@ -1,0 +1,500 @@
+<!-- Header Section -->
+<section class="adherent-header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 text-center" data-aos="fade-up">
+        <h1 class="header-title">Mon Espace Adhérent</h1>
+        <p class="header-subtitle">Bienvenue, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Navigation Tabs -->
+<section class="tabs-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="tabs-container" data-aos="fade-up">
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'profile'"
+            (click)="setActiveTab('profile')">
+            <i class="fas fa-user me-2"></i>Mon Profil
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'subscriptions'"
+            (click)="setActiveTab('subscriptions')">
+            <i class="fas fa-credit-card me-2"></i>Cotisations
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'reports'"
+            (click)="setActiveTab('reports')">
+            <i class="fas fa-exclamation-triangle me-2"></i>Signalements
+          </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'messages'"
+            (click)="setActiveTab('messages')">
+            <i class="fas fa-comments me-2"></i>Messages
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Cards -->
+<section class="stats-section" *ngIf="activeTab !== 'profile'">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.totalSubscriptions }}</div>
+            <div class="stat-label">Cotisations</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.activeSubscriptions }}</div>
+            <div class="stat-label">Actives</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.pendingReports }}</div>
+            <div class="stat-label">Signalements</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="stat-content">
+            <div class="stat-number">{{ stats.unreadMessages }}</div>
+            <div class="stat-label">Messages</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Tab Content -->
+<section class="tab-content-section section-padding">
+  <div class="container">
+    
+    <!-- Profile Tab -->
+    <div *ngIf="activeTab === 'profile'" class="tab-content" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="profile-container">
+            <div class="profile-header">
+              <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+              <div class="profile-info">
+                <h3>{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h3>
+                <p class="profile-email">{{ currentUser?.email }}</p>
+                <span class="profile-status" [ngClass]="'status-' + currentUser?.subscriptionStatus">
+                  {{ currentUser?.subscriptionStatus | titlecase }}
+                </span>
+              </div>
+            </div>
+            
+            <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="firstName" class="form-label">Prénom *</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'firstName')"
+                    id="firstName" 
+                    formControlName="firstName">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'firstName')">
+                    {{ getFieldError(profileForm, 'firstName') }}
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="lastName" class="form-label">Nom *</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'lastName')"
+                    id="lastName" 
+                    formControlName="lastName">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'lastName')">
+                    {{ getFieldError(profileForm, 'lastName') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">Email *</label>
+                  <input 
+                    type="email" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'email')"
+                    id="email" 
+                    formControlName="email">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'email')">
+                    {{ getFieldError(profileForm, 'email') }}
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="phone" class="form-label">Téléphone</label>
+                  <input 
+                    type="tel" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'phone')"
+                    id="phone" 
+                    formControlName="phone">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'phone')">
+                    {{ getFieldError(profileForm, 'phone') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="address" class="form-label">Adresse</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    id="address" 
+                    formControlName="address">
+                </div>
+                
+                <div class="col-md-4 mb-3">
+                  <label for="postalCode" class="form-label">Code postal</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'postalCode')"
+                    id="postalCode" 
+                    formControlName="postalCode">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'postalCode')">
+                    {{ getFieldError(profileForm, 'postalCode') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="city" class="form-label">Ville</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    id="city" 
+                    formControlName="city">
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                  <label for="emergencyContact" class="form-label">Contact d'urgence</label>
+                  <input 
+                    type="text" 
+                    class="form-control form-control-custom" 
+                    id="emergencyContact" 
+                    formControlName="emergencyContact">
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="emergencyPhone" class="form-label">Téléphone d'urgence</label>
+                  <input 
+                    type="tel" 
+                    class="form-control form-control-custom" 
+                    [class.is-invalid]="isFieldInvalid(profileForm, 'emergencyPhone')"
+                    id="emergencyPhone" 
+                    formControlName="emergencyPhone">
+                  <div class="invalid-feedback" *ngIf="isFieldInvalid(profileForm, 'emergencyPhone')">
+                    {{ getFieldError(profileForm, 'emergencyPhone') }}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="text-center">
+                <button 
+                  type="submit" 
+                  class="btn btn-custom btn-lg"
+                  [disabled]="isLoading">
+                  <span *ngIf="!isLoading">
+                    <i class="fas fa-save me-2"></i>Mettre à jour
+                  </span>
+                  <span *ngIf="isLoading">
+                    <i class="fas fa-spinner fa-spin me-2"></i>Mise à jour...
+                  </span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Subscriptions Tab -->
+    <div *ngIf="activeTab === 'subscriptions'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-12">
+          <div class="subscriptions-container">
+            <h3 class="section-title">Mes Cotisations</h3>
+            
+            <div class="subscriptions-list" *ngIf="subscriptions.length > 0">
+              <div class="subscription-card" *ngFor="let subscription of subscriptions" data-aos="fade-up">
+                <div class="subscription-header">
+                  <div class="subscription-period">{{ subscription.period }}</div>
+                  <div class="subscription-status" [ngClass]="getSubscriptionStatusClass(subscription.status)">
+                    {{ subscription.status | titlecase }}
+                  </div>
+                </div>
+                <div class="subscription-content">
+                  <div class="subscription-amount">{{ subscription.amount }}€</div>
+                  <div class="subscription-date">{{ formatDate(subscription.paymentDate) }}</div>
+                  <div class="subscription-method">{{ subscription.paymentMethod | titlecase }}</div>
+                  <div class="subscription-reference" *ngIf="subscription.reference">
+                    Réf: {{ subscription.reference }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="empty-state" *ngIf="subscriptions.length === 0">
+              <i class="fas fa-credit-card"></i>
+              <h4>Aucune cotisation trouvée</h4>
+              <p>Vos cotisations apparaîtront ici une fois enregistrées.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reports Tab -->
+    <div *ngIf="activeTab === 'reports'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="reports-container">
+            <h3 class="section-title">Mes Signalements</h3>
+            
+            <div class="reports-list" *ngIf="reports.length > 0">
+              <div class="report-card" *ngFor="let report of reports" data-aos="fade-up">
+                <div class="report-header">
+                  <h4 class="report-title">{{ report.title }}</h4>
+                  <div class="report-meta">
+                    <span class="report-category">{{ report.category | titlecase }}</span>
+                    <span class="report-priority" [ngClass]="getPriorityClass(report.priority)">
+                      {{ report.priority | titlecase }}
+                    </span>
+                  </div>
+                </div>
+                <div class="report-content">
+                  <p class="report-description">{{ report.description }}</p>
+                  <div class="report-footer">
+                    <div class="report-status" [ngClass]="getReportStatusClass(report.status)">
+                      {{ report.status | titlecase }}
+                    </div>
+                    <div class="report-date">{{ formatDate(report.createdAt) }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="empty-state" *ngIf="reports.length === 0">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h4>Aucun signalement</h4>
+              <p>Vous n'avez pas encore créé de signalement.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="report-form-container">
+            <h4>Nouveau Signalement</h4>
+            <form [formGroup]="reportForm" (ngSubmit)="onReportSubmit()">
+              <div class="mb-3">
+                <label for="reportTitle" class="form-label">Titre *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(reportForm, 'title')"
+                  id="reportTitle" 
+                  formControlName="title"
+                  placeholder="Titre du signalement">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(reportForm, 'title')">
+                  {{ getFieldError(reportForm, 'title') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="reportCategory" class="form-label">Catégorie *</label>
+                <select 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(reportForm, 'category')"
+                  id="reportCategory" 
+                  formControlName="category">
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="incident">Incident</option>
+                  <option value="complaint">Plainte</option>
+                  <option value="suggestion">Suggestion</option>
+                  <option value="other">Autre</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(reportForm, 'category')">
+                  {{ getFieldError(reportForm, 'category') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="reportPriority" class="form-label">Priorité *</label>
+                <select 
+                  class="form-control form-control-custom" 
+                  id="reportPriority" 
+                  formControlName="priority">
+                  <option value="low">Faible</option>
+                  <option value="medium">Moyenne</option>
+                  <option value="high">Élevée</option>
+                  <option value="urgent">Urgente</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="reportDescription" class="form-label">Description *</label>
+                <textarea 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(reportForm, 'description')"
+                  id="reportDescription" 
+                  formControlName="description"
+                  rows="4"
+                  placeholder="Décrivez votre signalement en détail..."></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(reportForm, 'description')">
+                  {{ getFieldError(reportForm, 'description') }}
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-custom w-100"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="fas fa-paper-plane me-2"></i>Envoyer
+                </span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Envoi...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Messages Tab -->
+    <div *ngIf="activeTab === 'messages'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="messages-container">
+            <h3 class="section-title">Mes Messages</h3>
+            
+            <div class="messages-list" *ngIf="messages.length > 0">
+              <div class="message-card" *ngFor="let message of messages" data-aos="fade-up">
+                <div class="message-header">
+                  <h4 class="message-subject">{{ message.subject }}</h4>
+                  <div class="message-status" [ngClass]="'status-' + message.status">
+                    {{ message.status | titlecase }}
+                  </div>
+                </div>
+                <div class="message-content">
+                  <p class="message-text">{{ message.message }}</p>
+                  <div class="message-footer">
+                    <div class="message-date">{{ formatDate(message.createdAt) }}</div>
+                    <div class="message-reply" *ngIf="message.reply">
+                      <strong>Réponse:</strong> {{ message.reply }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="empty-state" *ngIf="messages.length === 0">
+              <i class="fas fa-comments"></i>
+              <h4>Aucun message</h4>
+              <p>Vous n'avez pas encore envoyé de message.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="message-form-container">
+            <h4>Nouveau Message</h4>
+            <form [formGroup]="messageForm" (ngSubmit)="onMessageSubmit()">
+              <div class="mb-3">
+                <label for="messageSubject" class="form-label">Sujet *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(messageForm, 'subject')"
+                  id="messageSubject" 
+                  formControlName="subject"
+                  placeholder="Sujet de votre message">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(messageForm, 'subject')">
+                  {{ getFieldError(messageForm, 'subject') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="messageText" class="form-label">Message *</label>
+                <textarea 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(messageForm, 'message')"
+                  id="messageText" 
+                  formControlName="message"
+                  rows="6"
+                  placeholder="Votre message..."></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(messageForm, 'message')">
+                  {{ getFieldError(messageForm, 'message') }}
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                class="btn btn-custom w-100"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">
+                  <i class="fas fa-paper-plane me-2"></i>Envoyer
+                </span>
+                <span *ngIf="isLoading">
+                  <i class="fas fa-spinner fa-spin me-2"></i>Envoi...
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</section>
