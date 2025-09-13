@@ -130,8 +130,8 @@ export class AdminSpaceComponent implements OnInit {
   loadNews() {
     return new Promise<void>((resolve) => {
       this.associationService.getNews().subscribe({
-        next: (news) => {
-          this.news = news;
+        next: (response) => {
+          this.news = response.success ? response.data : [];
           resolve();
         },
         error: (error) => {
@@ -146,8 +146,8 @@ export class AdminSpaceComponent implements OnInit {
   loadEvents() {
     return new Promise<void>((resolve) => {
       this.associationService.getEvents().subscribe({
-        next: (events) => {
-          this.events = events;
+        next: (response) => {
+          this.events = response.success ? response.data : [];
           resolve();
         },
         error: (error) => {
@@ -162,8 +162,8 @@ export class AdminSpaceComponent implements OnInit {
   loadMessages() {
     return new Promise<void>((resolve) => {
       this.associationService.getMessages().subscribe({
-        next: (messages) => {
-          this.messages = messages;
+        next: (response) => {
+          this.messages = response.success ? response.data : [];
           resolve();
         },
         error: (error) => {
@@ -178,8 +178,8 @@ export class AdminSpaceComponent implements OnInit {
   loadReports() {
     return new Promise<void>((resolve) => {
       this.associationService.getReports().subscribe({
-        next: (reports) => {
-          this.reports = reports;
+        next: (response) => {
+          this.reports = response.success ? response.data : [];
           resolve();
         },
         error: (error) => {
@@ -194,8 +194,8 @@ export class AdminSpaceComponent implements OnInit {
   loadSubscriptions() {
     return new Promise<void>((resolve) => {
       this.associationService.getSubscriptions().subscribe({
-        next: (subscriptions) => {
-          this.subscriptions = subscriptions;
+        next: (response) => {
+          this.subscriptions = response.success ? response.data : [];
           resolve();
         },
         error: (error) => {

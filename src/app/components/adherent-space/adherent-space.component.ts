@@ -102,8 +102,8 @@ export class AdherentSpaceComponent implements OnInit {
     
     // Load subscriptions
     this.associationService.getSubscriptions(this.currentUser?.id).subscribe({
-      next: (subscriptions) => {
-        this.subscriptions = subscriptions;
+      next: (response) => {
+        this.subscriptions = response.success ? response.data : [];
         this.updateStats();
       },
       error: (error) => {
@@ -113,8 +113,8 @@ export class AdherentSpaceComponent implements OnInit {
 
     // Load reports
     this.associationService.getReports(this.currentUser?.id).subscribe({
-      next: (reports) => {
-        this.reports = reports;
+      next: (response) => {
+        this.reports = response.success ? response.data : [];
         this.updateStats();
       },
       error: (error) => {
@@ -124,8 +124,8 @@ export class AdherentSpaceComponent implements OnInit {
 
     // Load messages
     this.associationService.getMessages().subscribe({
-      next: (messages) => {
-        this.messages = messages;
+      next: (response) => {
+        this.messages = response.success ? response.data : [];
         this.updateStats();
         this.isLoading = false;
       },

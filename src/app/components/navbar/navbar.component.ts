@@ -10,6 +10,7 @@ import { User } from '../../models/user.model';
 })
 export class NavbarComponent implements OnInit {
   isMenuOpen = false;
+  showUserMenu = false;
   currentUser: User | null = null;
 
   constructor(
@@ -40,5 +41,17 @@ export class NavbarComponent implements OnInit {
   navigateTo(route: string) {
     this.router.navigate([route]);
     this.closeMenu();
+    this.showUserMenu = false;
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  scrollToSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost/api/',
+  apiUrl: 'https://alrcf.fr/api/',
   appName: 'ALRCF Association',
   version: '1.0.0'
 };

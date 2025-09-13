@@ -1,229 +1,88 @@
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="hero-background">
-    <div class="hero-overlay"></div>
-    <div class="hero-particles"></div>
+<!-- Hero Banner -->
+<section id="hero-banner" style="height: 500px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden;">
+  <img src="assets/images/franek3.webp" alt="modern residential building exterior with gardens, bright daylight, community living" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" onerror="this.style.display='none';">
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3);"></div>
+  <div class="absolute inset-0 flex items-center justify-center">
+    <div class="text-center text-white max-w-4xl mx-auto px-5" data-aos="fade-up">
+      <h1 class="text-5xl font-bold mb-4">Association des Locataires</h1>
+      <h2 class="text-3xl font-medium mb-6">Résidence Claire Franek</h2>
+      <p class="text-xl mb-8 opacity-90">Ensemble pour améliorer notre cadre de vie et défendre nos intérêts</p>
+      <button class="bg-royal-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors" (click)="scrollToSection('about')">
+        Découvrir notre association
+      </button>
+    </div>
   </div>
-  
-  <div class="container">
-    <div class="row align-items-center min-vh-100">
-      <div class="col-lg-6" data-aos="fade-right">
-        <div class="hero-content">
-          <h1 class="hero-title">
-            <span class="title-line">{{ heroData.title }}</span>
-            <span class="title-highlight">{{ heroData.subtitle }}</span>
-          </h1>
-          <p class="hero-description">{{ heroData.description }}</p>
-          <div class="hero-buttons">
-            <button class="btn btn-custom btn-lg me-3" routerLink="/a-propos">
-              <i class="fas fa-info-circle me-2"></i>En savoir plus
-            </button>
-            <button class="btn btn-outline-custom btn-lg" routerLink="/contact">
-              <i class="fas fa-envelope me-2"></i>Nous contacter
-            </button>
-          </div>
+</section>
+
+<!-- Latest News Section -->
+<section id="latest-news" class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Actualités Récentes</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Restez informé des dernières nouvelles et mises à jour de notre résidence</p>
+    </div>
+    
+    <div class="grid md:grid-cols-3 gap-8" *ngIf="news.length > 0; else noNews">
+      <article class="bg-white border border-light-grey rounded-lg p-5" *ngFor="let article of news" data-aos="fade-up" data-aos-delay="100">
+        <img class="w-full h-48 object-cover rounded-lg mb-4" [src]="article.imageUrl || 'assets/images/franek3.webp'" [alt]="article.title">
+        <div class="flex items-center text-sm text-gray-500 mb-3">
+          <i class="fa-solid fa-calendar-days mr-2"></i>
+          <span>{{ formatDate(article.publishedAt) }}</span>
         </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">{{ article.title }}</h3>
+        <p class="text-gray-600 mb-4">{{ article.content | slice:0:150 }}...</p>
+        <span class="text-royal-blue font-medium hover:underline cursor-pointer">Lire plus →</span>
+      </article>
+    </div>
+    
+    <ng-template #noNews>
+      <div class="text-center py-12">
+        <i class="fa-solid fa-newspaper text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600 text-lg">Aucune actualité disponible pour le moment</p>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<!-- Quick Updates -->
+<section id="quick-updates" class="py-16">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Mises à Jour Rapides</h2>
+      <p class="text-gray-600">Informations importantes pour tous les résidents</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white border border-light-grey rounded-lg p-5 text-center" data-aos="fade-up" data-aos-delay="100">
+        <div class="w-12 h-12 bg-royal-blue rounded-lg flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-users text-white text-lg"></i>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">{{ stats.totalMembers }}</h3>
+        <p class="text-gray-600">Membres Actifs</p>
       </div>
       
-      <div class="col-lg-6" data-aos="fade-left">
-        <div class="hero-image">
-          <div class="image-container">
-            <img src="assets/images/hero-illustration.svg" alt="ALRCF Illustration" class="img-fluid">
-            <div class="floating-elements">
-              <div class="floating-icon icon-1">
-                <i class="fas fa-users"></i>
-              </div>
-              <div class="floating-icon icon-2">
-                <i class="fas fa-heart"></i>
-              </div>
-              <div class="floating-icon icon-3">
-                <i class="fas fa-balance-scale"></i>
-              </div>
-              <div class="floating-icon icon-4">
-                <i class="fas fa-handshake"></i>
-              </div>
-            </div>
-          </div>
+      <div class="bg-white border border-light-grey rounded-lg p-5 text-center" data-aos="fade-up" data-aos-delay="200">
+        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-tools text-white text-lg"></i>
         </div>
+        <h3 class="font-bold text-gray-900 mb-2">{{ stats.activeProjects }}</h3>
+        <p class="text-gray-600">Projets en Cours</p>
       </div>
-    </div>
-  </div>
-  
-  <div class="scroll-indicator">
-    <div class="scroll-arrow">
-      <i class="fas fa-chevron-down"></i>
-    </div>
-  </div>
-</section>
-
-<!-- Statistics Section -->
-<section class="stats-section section-padding">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center mb-5" data-aos="fade-up">
-        <h2 class="section-title">Notre Impact</h2>
-        <p class="section-subtitle">Des chiffres qui témoignent de notre engagement</p>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let stat of stats; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 100">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i [class]="stat.icon"></i>
-          </div>
-          <div class="stat-number">{{ stat.number }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
+      
+      <div class="bg-white border border-light-grey rounded-lg p-5 text-center" data-aos="fade-up" data-aos-delay="300">
+        <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-calendar text-white text-lg"></i>
         </div>
+        <h3 class="font-bold text-gray-900 mb-2">{{ stats.upcomingEvents }}</h3>
+        <p class="text-gray-600">Événements ce Mois</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- Features Section -->
-<section class="features-section section-padding bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center mb-5" data-aos="fade-up">
-        <h2 class="section-title">Nos Valeurs</h2>
-        <p class="section-subtitle">Les principes qui nous guident au quotidien</p>
-      </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-3 col-md-6 mb-4" *ngFor="let feature of features; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 150">
-        <div class="feature-card">
-          <div class="feature-icon" [ngClass]="'icon-' + feature.color">
-            <i [class]="feature.icon"></i>
-          </div>
-          <h4 class="feature-title">{{ feature.title }}</h4>
-          <p class="feature-description">{{ feature.description }}</p>
+      
+      <div class="bg-white border border-light-grey rounded-lg p-5 text-center" data-aos="fade-up" data-aos-delay="400">
+        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-bullhorn text-white text-lg"></i>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- News Section -->
-<section class="news-section section-padding">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center mb-5" data-aos="fade-up">
-        <h2 class="section-title">Actualités Récentes</h2>
-        <p class="section-subtitle">Restez informés de nos dernières activités</p>
-      </div>
-    </div>
-    
-    <div class="row" *ngIf="!isLoading">
-      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let article of news; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 200">
-        <div class="news-card">
-          <div class="news-image" *ngIf="article.imageUrl">
-            <img [src]="article.imageUrl" [alt]="article.title" class="img-fluid">
-            <div class="news-category">{{ article.category }}</div>
-          </div>
-          <div class="news-content">
-            <div class="news-meta">
-              <span class="news-date">
-                <i class="fas fa-calendar me-1"></i>
-                {{ formatDate(article.publishedAt) }}
-              </span>
-              <span class="news-author">
-                <i class="fas fa-user me-1"></i>
-                {{ article.author }}
-              </span>
-            </div>
-            <h4 class="news-title">{{ article.title }}</h4>
-            <p class="news-excerpt">{{ article.content | slice:0:150 }}...</p>
-            <a href="#" class="news-link">Lire la suite <i class="fas fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row" *ngIf="isLoading">
-      <div class="col-12 text-center">
-        <div class="spinner"></div>
-        <p>Chargement des actualités...</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Events Section -->
-<section class="events-section section-padding bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center mb-5" data-aos="fade-up">
-        <h2 class="section-title">Événements à Venir</h2>
-        <p class="section-subtitle">Rejoignez-nous lors de nos prochains événements</p>
-      </div>
-    </div>
-    
-    <div class="row" *ngIf="!isLoading">
-      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let event of events; let i = index" data-aos="fade-up" [attr.data-aos-delay]="i * 200">
-        <div class="event-card" [ngClass]="'status-' + getEventStatus(event)">
-          <div class="event-image" *ngIf="event.imageUrl">
-            <img [src]="event.imageUrl" [alt]="event.title" class="img-fluid">
-            <div class="event-status" [ngClass]="'status-' + getEventStatus(event)">
-              <span *ngIf="getEventStatus(event) === 'soon'">Bientôt</span>
-              <span *ngIf="getEventStatus(event) === 'upcoming'">À venir</span>
-              <span *ngIf="getEventStatus(event) === 'past'">Terminé</span>
-            </div>
-          </div>
-          <div class="event-content">
-            <div class="event-date">
-              <i class="fas fa-calendar-alt me-2"></i>
-              {{ formatDate(event.startDate) }}
-            </div>
-            <h4 class="event-title">{{ event.title }}</h4>
-            <p class="event-description">{{ event.description | slice:0:120 }}...</p>
-            <div class="event-meta">
-              <span class="event-location">
-                <i class="fas fa-map-marker-alt me-1"></i>
-                {{ event.location }}
-              </span>
-              <span class="event-participants" *ngIf="event.maxParticipants">
-                <i class="fas fa-users me-1"></i>
-                {{ event.currentParticipants }}/{{ event.maxParticipants }}
-              </span>
-            </div>
-            <button class="btn btn-custom btn-sm" *ngIf="getEventStatus(event) !== 'past'">
-              <i class="fas fa-plus me-1"></i>S'inscrire
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="row" *ngIf="isLoading">
-      <div class="col-12 text-center">
-        <div class="spinner"></div>
-        <p>Chargement des événements...</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="cta-section section-padding">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center" data-aos="fade-up">
-        <div class="cta-content">
-          <h2 class="cta-title">Rejoignez Notre Association</h2>
-          <p class="cta-description">
-            Devenez membre de l'ALRCF et participez à la construction d'un monde plus juste et libre.
-            Ensemble, nous pouvons faire la différence.
-          </p>
-          <div class="cta-buttons">
-            <button class="btn btn-custom btn-lg me-3" routerLink="/connexion">
-              <i class="fas fa-user-plus me-2"></i>Devenir Membre
-            </button>
-            <button class="btn btn-outline-custom btn-lg" routerLink="/contact">
-              <i class="fas fa-envelope me-2"></i>Nous Contacter
-            </button>
-          </div>
-        </div>
+        <h3 class="font-bold text-gray-900 mb-2">{{ stats.announcements }}</h3>
+        <p class="text-gray-600">Annonces Importantes</p>
       </div>
     </div>
   </div>

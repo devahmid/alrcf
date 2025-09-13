@@ -1,47 +1,58 @@
 <?php
+/**
+ * Endpoint pour récupérer les signalements
+ * GET /api/reports/get.php?adherentId=123 (optionnel)
+ */
+
 require_once '../config/database.php';
 require_once '../config/cors.php';
 
-/**
- * API de récupération des signalements
- * GET /api/reports/get.php
- * GET /api/reports/get.php?adherentId=1 (pour un adhérent spécifique)
- */
+header('Content-Type: application/json');
 
 try {
-    $database = new Database();
-    $db = $database->getConnection();
+    // Connexion à la base de données
+    $db = createDatabase();
+    $pdo = $db->getConnection();
     
-    if ($db === null) {
+    if (!$pdo) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    // Vérifier si on demande les signalements d'un adhérent spécifique
-    if (isset($_GET['adherentId']) && is_numeric($_GET['adherentId'])) {
-        $adherentId = $_GET['adherentId'];
-        $query = "SELECT * FROM reports WHERE adherentId = :adherentId ORDER BY createdAt DESC";
-        $stmt = $db->prepare($query);
-        $stmt->bindParam(':adherentId', $adherentId);
-        $stmt->execute();
+    // Vérifier si un adherentId spécifique est demandé
+    if (isset($_GET['adherentId']) && !empty($_GET['adherentId'])) {
+        $adherentId = (int)$_GET['adherentId'];
         
-        $reports = $stmt->fetchAll();
+        $stmt = $pdo->prepare("
+            SELECT r.*, u.firstName, u.lastName 
+            FROM reports r 
+            LEFT JOIN users u ON r.adherentId = u.id 
+            WHERE r.adherentId = ? 
+            ORDER BY r.createdAt DESC
+        ");
+        $stmt->execute([$adherentId]);
+        $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
         // Récupérer tous les signalements
-        $query = "SELECT r.*, u.firstName, u.lastName, u.email 
-                  FROM reports r 
-                  LEFT JOIN users u ON r.adherentId = u.id 
-                  ORDER BY r.createdAt DESC";
-        $stmt = $db->prepare($query);
+        $stmt = $pdo->prepare("
+            SELECT r.*, u.firstName, u.lastName 
+            FROM reports r 
+            LEFT JOIN users u ON r.adherentId = u.id 
+            ORDER BY r.createdAt DESC
+        ");
         $stmt->execute();
-        
-        $reports = $stmt->fetchAll();
+        $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    http_response_code(200);
-    echo json_encode($reports);
+    echo json_encode([
+        'success' => true,
+        'data' => $reports
+    ]);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+    error_log("Erreur reports/get.php: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erreur interne du serveur'
+    ]);
 }
 ?>

@@ -1,5 +1,9 @@
 /* Global Styles */
 @import '~aos/dist/aos.css';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   margin: 0;

@@ -1,31 +1,41 @@
 <?php
-require_once '../config/database.php';
-require_once '../config/cors.php';
-
 /**
- * API de récupération des messages de contact
+ * Endpoint pour récupérer les messages de contact
  * GET /api/contact/get.php
  */
 
+require_once '../config/database.php';
+require_once '../config/cors.php';
+
+header('Content-Type: application/json');
+
 try {
-    $database = new Database();
-    $db = $database->getConnection();
+    // Connexion à la base de données
+    $db = createDatabase();
+    $pdo = $db->getConnection();
     
-    if ($db === null) {
+    if (!$pdo) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    $query = "SELECT * FROM contact_messages ORDER BY created_at DESC";
-    $stmt = $db->prepare($query);
+    // Récupérer tous les messages de contact
+    $stmt = $pdo->prepare("
+        SELECT * FROM contact_messages 
+        ORDER BY createdAt DESC
+    ");
     $stmt->execute();
+    $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    $messages = $stmt->fetchAll();
-    
-    http_response_code(200);
-    echo json_encode($messages);
+    echo json_encode([
+        'success' => true,
+        'data' => $messages
+    ]);
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+    error_log("Erreur contact/get.php: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erreur interne du serveur'
+    ]);
 }
 ?>

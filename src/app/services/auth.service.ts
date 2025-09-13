@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User, Adherent, Admin } from '../models/user.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthService {
     return this.currentUserSubject;
   }
   
-  private apiUrl = 'api/'; // Will be configured based on environment
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {
     // Check if user is logged in on service initialization

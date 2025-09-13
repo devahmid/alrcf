@@ -1,52 +1,71 @@
 <?php
+/**
+ * Endpoint pour récupérer les actualités
+ * GET /api/news/get.php?id=123 (optionnel)
+ */
+
 require_once '../config/database.php';
 require_once '../config/cors.php';
 
-/**
- * API de récupération des actualités
- * GET /api/news/get.php
- * GET /api/news/get.php?id=1 (pour une actualité spécifique)
- */
+header('Content-Type: application/json');
 
 try {
-    $database = new Database();
-    $db = $database->getConnection();
+    // Connexion à la base de données
+    $db = createDatabase();
+    $pdo = $db->getConnection();
     
-    if ($db === null) {
+    if (!$pdo) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    // Vérifier si on demande une actualité spécifique
-    if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-        $id = $_GET['id'];
-        $query = "SELECT * FROM news WHERE id = :id AND is_published = 1";
-        $stmt = $db->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+    // Vérifier si un ID spécifique est demandé
+    if (isset($_GET['id']) && !empty($_GET['id'])) {
+        $id = (int)$_GET['id'];
         
-        $news = $stmt->fetch();
+        $stmt = $pdo->prepare("
+            SELECT n.*, u.firstName, u.lastName 
+            FROM news n 
+            LEFT JOIN users u ON n.authorId = u.id 
+            WHERE n.id = ? AND n.isPublished = 1
+        ");
+        $stmt->execute([$id]);
+        $news = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($news) {
-            http_response_code(200);
-            echo json_encode($news);
-        } else {
-            http_response_code(404);
-            echo json_encode(['success' => false, 'message' => 'Actualité non trouvée']);
+        if (!$news) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Actualité non trouvée'
+            ]);
+            exit;
         }
+        
+        echo json_encode([
+            'success' => true,
+            'data' => $news
+        ]);
     } else {
         // Récupérer toutes les actualités publiées
-        $query = "SELECT * FROM news WHERE is_published = 1 ORDER BY published_at DESC";
-        $stmt = $db->prepare($query);
+        $stmt = $pdo->prepare("
+            SELECT n.*, u.firstName, u.lastName 
+            FROM news n 
+            LEFT JOIN users u ON n.authorId = u.id 
+            WHERE n.isPublished = 1 
+            ORDER BY n.createdAt DESC
+        ");
         $stmt->execute();
+        $news = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        $news = $stmt->fetchAll();
-        
-        http_response_code(200);
-        echo json_encode($news);
+        echo json_encode([
+            'success' => true,
+            'data' => $news
+        ]);
     }
     
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+    error_log("Erreur news/get.php: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erreur interne du serveur'
+    ]);
 }
 ?>

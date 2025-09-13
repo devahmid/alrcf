@@ -10,6 +10,7 @@ import { AssociationService } from '../../services/association.service';
 export class ContactComponent implements OnInit {
   contactForm: FormGroup;
   isSubmitting = false;
+  isLoading = false;
   submitMessage = '';
   submitSuccess = false;
 
@@ -75,7 +76,8 @@ export class ContactComponent implements OnInit {
     private associationService: AssociationService
   ) {
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.pattern(/^[0-9+\-\s()]+$/)]],
       subject: ['', [Validators.required, Validators.minLength(5)]],
@@ -103,19 +105,31 @@ export class ContactComponent implements OnInit {
   onSubmit() {
     if (this.contactForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
+      this.isLoading = true;
       this.submitMessage = '';
       
       const formData = this.contactForm.value;
       
-      this.associationService.sendMessage(formData).subscribe({
+      // Préparer les données pour l'API (combiner firstName + lastName en name)
+      const apiData = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message
+      };
+      
+      this.associationService.sendMessage(apiData).subscribe({
         next: (response) => {
           this.isSubmitting = false;
+          this.isLoading = false;
           this.submitSuccess = true;
           this.submitMessage = 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.';
           this.contactForm.reset();
         },
         error: (error) => {
           this.isSubmitting = false;
+          this.isLoading = false;
           this.submitSuccess = false;
           this.submitMessage = 'Une erreur est survenue lors de l\'envoi de votre message. Veuillez réessayer.';
           console.error('Error sending message:', error);

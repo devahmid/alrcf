@@ -10,51 +10,15 @@ import { News, Event } from '../../models/association.model';
 export class HomeComponent implements OnInit {
   news: News[] = [];
   events: Event[] = [];
-  isLoading = true;
-
-  // Hero section data
-  heroData = {
-    title: 'Bienvenue à l\'ALRCF',
-    subtitle: 'Association pour la Liberté et la Responsabilité Civique Française',
-    description: 'Rejoignez notre communauté engagée pour défendre les valeurs de liberté, d\'égalité et de fraternité.',
-    image: 'assets/images/hero-bg.jpg'
-  };
-
-  // Features data
-  features = [
-    {
-      icon: 'fas fa-users',
-      title: 'Communauté Active',
-      description: 'Plus de 1000 membres engagés dans la défense de nos valeurs',
-      color: 'primary'
-    },
-    {
-      icon: 'fas fa-handshake',
-      title: 'Solidarité',
-      description: 'Entraide et soutien mutuel entre tous nos adhérents',
-      color: 'success'
-    },
-    {
-      icon: 'fas fa-balance-scale',
-      title: 'Justice',
-      description: 'Défense des droits civiques et de la justice sociale',
-      color: 'warning'
-    },
-    {
-      icon: 'fas fa-heart',
-      title: 'Engagement',
-      description: 'Actions concrètes pour un monde plus juste et libre',
-      color: 'danger'
-    }
-  ];
+  isLoading = false;
 
   // Statistics
-  stats = [
-    { number: '1000+', label: 'Membres', icon: 'fas fa-users' },
-    { number: '50+', label: 'Événements', icon: 'fas fa-calendar' },
-    { number: '15', label: 'Années d\'existence', icon: 'fas fa-history' },
-    { number: '100%', label: 'Engagement', icon: 'fas fa-heart' }
-  ];
+  stats = {
+    totalMembers: 248,
+    activeProjects: 12,
+    upcomingEvents: 3,
+    announcements: 5
+  };
 
   constructor(private associationService: AssociationService) { }
 
@@ -68,8 +32,8 @@ export class HomeComponent implements OnInit {
     
     // Load news
     this.associationService.getNews().subscribe({
-      next: (news) => {
-        this.news = news.slice(0, 3); // Show only 3 latest news
+      next: (response) => {
+        this.news = response.success ? response.data.slice(0, 3) : []; // Show only 3 latest news
       },
       error: (error) => {
         console.error('Error loading news:', error);
@@ -79,13 +43,14 @@ export class HomeComponent implements OnInit {
 
     // Load events
     this.associationService.getEvents().subscribe({
-      next: (events) => {
-        this.events = events.slice(0, 3); // Show only 3 upcoming events
-        this.isLoading = false;
+      next: (response) => {
+        this.events = response.success ? response.data.slice(0, 3) : []; // Show only 3 upcoming events
       },
       error: (error) => {
         console.error('Error loading events:', error);
         this.events = [];
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });
@@ -123,5 +88,12 @@ export class HomeComponent implements OnInit {
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  scrollToSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }

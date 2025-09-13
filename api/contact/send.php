@@ -36,18 +36,24 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
-    $database = new Database();
+    $database = createDatabase();
     $db = $database->getConnection();
     
     if ($db === null) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    $query = "INSERT INTO contact_messages (name, email, phone, subject, message, status, created_at) 
-              VALUES (:name, :email, :phone, :subject, :message, 'new', NOW())";
+    // Séparer le nom en prénom et nom
+    $nameParts = explode(' ', $name, 2);
+    $firstName = $nameParts[0];
+    $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
+    
+    $query = "INSERT INTO contact_messages (firstName, lastName, email, phone, subject, message, status, createdAt) 
+              VALUES (:firstName, :lastName, :email, :phone, :subject, :message, 'new', NOW())";
     
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':firstName', $firstName);
+    $stmt->bindParam(':lastName', $lastName);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':phone', $phone);
     $stmt->bindParam(':subject', $subject);
@@ -56,14 +62,43 @@ try {
     if ($stmt->execute()) {
         $messageId = $db->lastInsertId();
         
-        // Ici, vous pourriez envoyer un email de notification à l'admin
-        // mail('admin@alrcf.fr', 'Nouveau message de contact', $message);
+        // Tentative d'envoi d'emails (optionnel)
+        $emailSent = false;
+        try {
+            require_once '../config/email.php';
+            $emailSender = createEmailSender();
+            
+            // Email de notification à l'admin
+            $adminEmailSent = $emailSender->sendContactNotification([
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'subject' => $subject,
+                'message' => $message
+            ]);
+            
+            // Email de confirmation à l'expéditeur
+            $confirmationEmailSent = $emailSender->sendContactConfirmation([
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'subject' => $subject,
+                'message' => $message
+            ]);
+            
+            $emailSent = $adminEmailSent && $confirmationEmailSent;
+            
+        } catch (Exception $emailException) {
+            // Les emails sont optionnels, on continue même en cas d'erreur
+            error_log("Erreur email contact: " . $emailException->getMessage());
+        }
         
         http_response_code(201);
         echo json_encode([
             'success' => true,
             'message' => 'Message envoyé avec succès',
-            'id' => $messageId
+            'id' => $messageId,
+            'email_sent' => $emailSent
         ]);
     } else {
         http_response_code(500);

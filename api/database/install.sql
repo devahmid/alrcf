@@ -1,11 +1,8 @@
--- Script de création des tables pour ALRCF
+-- Script d'installation simplifié pour ALRCF
 -- Exécuter ce script dans votre base de données existante
--- Remplacez 'u281164575_alrcf' par le nom de votre base de données
-
--- USE u281164575_alrcf; -- Décommentez cette ligne si nécessaire
 
 -- Table des utilisateurs (adhérents et admins)
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -31,7 +28,7 @@ CREATE TABLE users (
 );
 
 -- Table des actualités
-CREATE TABLE news (
+CREATE TABLE IF NOT EXISTS news (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
@@ -45,7 +42,7 @@ CREATE TABLE news (
 );
 
 -- Table des événements
-CREATE TABLE events (
+CREATE TABLE IF NOT EXISTS events (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -63,9 +60,10 @@ CREATE TABLE events (
 );
 
 -- Table des messages de contact
-CREATE TABLE contact_messages (
+CREATE TABLE IF NOT EXISTS contact_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     subject VARCHAR(255) NOT NULL,
@@ -77,7 +75,7 @@ CREATE TABLE contact_messages (
 );
 
 -- Table des signalements
-CREATE TABLE reports (
+CREATE TABLE IF NOT EXISTS reports (
     id INT AUTO_INCREMENT PRIMARY KEY,
     adherentId INT NOT NULL,
     title VARCHAR(255) NOT NULL,
@@ -93,12 +91,12 @@ CREATE TABLE reports (
 );
 
 -- Table des cotisations
-CREATE TABLE subscriptions (
+CREATE TABLE IF NOT EXISTS subscriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     adherentId INT NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
     paymentDate DATE NOT NULL,
-    period VARCHAR(10) NOT NULL, -- e.g., "2024"
+    period VARCHAR(10) NOT NULL,
     status ENUM('paid', 'pending', 'overdue') DEFAULT 'pending',
     paymentMethod ENUM('cash', 'check', 'transfer', 'card') NOT NULL,
     reference VARCHAR(100),
@@ -108,7 +106,7 @@ CREATE TABLE subscriptions (
 );
 
 -- Table des inscriptions aux événements
-CREATE TABLE event_registrations (
+CREATE TABLE IF NOT EXISTS event_registrations (
     id INT AUTO_INCREMENT PRIMARY KEY,
     eventId INT NOT NULL,
     adherentId INT NOT NULL,
@@ -120,7 +118,7 @@ CREATE TABLE event_registrations (
 );
 
 -- Insertion d'un utilisateur admin par défaut
-INSERT INTO users (
+INSERT IGNORE INTO users (
     email, 
     password, 
     firstName, 
@@ -133,7 +131,7 @@ INSERT INTO users (
     subscriptionAmount
 ) VALUES (
     'admin@alrcf.fr',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- password: password
+    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
     'Administrateur',
     'ALRCF',
     'admin',
@@ -145,25 +143,25 @@ INSERT INTO users (
 );
 
 -- Insertion de quelques données d'exemple
-INSERT INTO news (title, content, author, category) VALUES
+INSERT IGNORE INTO news (title, content, author, category) VALUES
 ('Bienvenue sur notre nouveau site', 'Nous sommes ravis de vous présenter notre nouveau site web moderne et interactif.', 'Administrateur', 'general'),
 ('Assemblée générale 2024', 'L\'assemblée générale annuelle aura lieu le 15 mars 2024 à 18h00.', 'Administrateur', 'event'),
 ('Nouvelle adhésion', 'Nous accueillons 15 nouveaux adhérents ce mois-ci !', 'Administrateur', 'announcement');
 
-INSERT INTO events (title, description, startDate, location, maxParticipants, registrationRequired) VALUES
+INSERT IGNORE INTO events (title, description, startDate, location, maxParticipants, registrationRequired) VALUES
 ('Assemblée générale 2024', 'Assemblée générale annuelle de l\'association', '2024-03-15 18:00:00', 'Salle des fêtes - Mairie', 100, TRUE),
 ('Formation premiers secours', 'Formation aux gestes de premiers secours', '2024-04-10 09:00:00', 'Centre de formation', 20, TRUE),
 ('Sortie culturelle', 'Visite du musée d\'art moderne', '2024-05-20 14:00:00', 'Musée d\'art moderne', 30, TRUE);
 
 -- Index pour améliorer les performances
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_memberNumber ON users(memberNumber);
-CREATE INDEX idx_news_published ON news(isPublished, publishedAt);
-CREATE INDEX idx_events_startDate ON events(startDate);
-CREATE INDEX idx_events_published ON events(isPublished);
-CREATE INDEX idx_contact_messages_status ON contact_messages(status);
-CREATE INDEX idx_reports_adherent ON reports(adherentId);
-CREATE INDEX idx_reports_status ON reports(status);
-CREATE INDEX idx_subscriptions_adherent ON subscriptions(adherentId);
-CREATE INDEX idx_subscriptions_period ON subscriptions(period);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+CREATE INDEX IF NOT EXISTS idx_users_memberNumber ON users(memberNumber);
+CREATE INDEX IF NOT EXISTS idx_news_published ON news(isPublished, publishedAt);
+CREATE INDEX IF NOT EXISTS idx_events_startDate ON events(startDate);
+CREATE INDEX IF NOT EXISTS idx_events_published ON events(isPublished);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
+CREATE INDEX IF NOT EXISTS idx_reports_adherent ON reports(adherentId);
+CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_adherent ON subscriptions(adherentId);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_period ON subscriptions(period);

@@ -2,22 +2,23 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { News, Event, ContactMessage, Report, Subscription } from '../models/association.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssociationService {
-  private apiUrl = 'api/';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
   // News methods
-  getNews(): Observable<News[]> {
-    return this.http.get<News[]>(`${this.apiUrl}news/get.php`);
+  getNews(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}news/get.php`);
   }
 
-  getNewsById(id: number): Observable<News> {
-    return this.http.get<News>(`${this.apiUrl}news/get.php?id=${id}`);
+  getNewsById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}news/get.php?id=${id}`);
   }
 
   createNews(news: Partial<News>): Observable<any> {
@@ -33,12 +34,12 @@ export class AssociationService {
   }
 
   // Events methods
-  getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${this.apiUrl}events/get.php`);
+  getEvents(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}events/get.php`);
   }
 
-  getEventById(id: number): Observable<Event> {
-    return this.http.get<Event>(`${this.apiUrl}events/get.php?id=${id}`);
+  getEventById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}events/get.php?id=${id}`);
   }
 
   createEvent(event: Partial<Event>): Observable<any> {
@@ -62,8 +63,8 @@ export class AssociationService {
     return this.http.post(`${this.apiUrl}contact/send.php`, message);
   }
 
-  getMessages(): Observable<ContactMessage[]> {
-    return this.http.get<ContactMessage[]>(`${this.apiUrl}contact/get.php`);
+  getMessages(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}contact/get.php`);
   }
 
   updateMessageStatus(id: number, status: string, reply?: string): Observable<any> {
@@ -75,11 +76,11 @@ export class AssociationService {
     return this.http.post(`${this.apiUrl}reports/create.php`, report);
   }
 
-  getReports(adherentId?: number): Observable<Report[]> {
+  getReports(adherentId?: number): Observable<any> {
     const url = adherentId 
       ? `${this.apiUrl}reports/get.php?adherentId=${adherentId}`
       : `${this.apiUrl}reports/get.php`;
-    return this.http.get<Report[]>(url);
+    return this.http.get<any>(url);
   }
 
   updateReport(id: number, report: Partial<Report>): Observable<any> {
@@ -87,11 +88,11 @@ export class AssociationService {
   }
 
   // Subscriptions methods
-  getSubscriptions(adherentId?: number): Observable<Subscription[]> {
+  getSubscriptions(adherentId?: number): Observable<any> {
     const url = adherentId 
       ? `${this.apiUrl}subscriptions/get.php?adherentId=${adherentId}`
       : `${this.apiUrl}subscriptions/get.php`;
-    return this.http.get<Subscription[]>(url);
+    return this.http.get<any>(url);
   }
 
   createSubscription(subscription: Partial<Subscription>): Observable<any> {

@@ -1,98 +1,56 @@
 <!-- Footer -->
-<footer class="footer">
-  <div class="container">
-    <div class="row">
-      <!-- Association Info -->
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
-        <div class="footer-section">
-          <div class="footer-logo">
-            <i class="fas fa-users"></i>
-            <h4>{{ footerData.association.name }}</h4>
+<footer id="footer" class="bg-gray-900 text-white py-12">
+  <div class="max-w-7xl mx-auto px-5">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-10 h-10 bg-royal-blue rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-building text-white text-lg"></i>
           </div>
-          <p class="footer-description">{{ footerData.association.description }}</p>
-          
-          <div class="footer-contact">
-            <div class="contact-item">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>{{ footerData.association.address }}</span>
-            </div>
-            <div class="contact-item">
-              <i class="fas fa-phone"></i>
-              <a href="tel:{{ footerData.association.phone }}">{{ footerData.association.phone }}</a>
-            </div>
-            <div class="contact-item">
-              <i class="fas fa-envelope"></i>
-              <a href="mailto:{{ footerData.association.email }}">{{ footerData.association.email }}</a>
-            </div>
+          <div>
+            <h1 class="text-xl font-bold">ALRCF</h1>
+            <p class="text-sm text-gray-400">Association</p>
           </div>
         </div>
+        <p class="text-gray-400 text-sm">L'Association des Locataires de la Résidence Claire Franek, au service des résidents depuis 1995.</p>
       </div>
       
-      <!-- Quick Links -->
-      <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="footer-section">
-          <h5 class="footer-title">Liens Rapides</h5>
-          <ul class="footer-links">
-            <li *ngFor="let link of footerData.quickLinks">
-              <a [routerLink]="link.route">{{ link.name }}</a>
-            </li>
-          </ul>
-        </div>
+      <div>
+        <h3 class="font-bold text-white mb-4">Navigation</h3>
+        <ul class="space-y-2">
+          <li><a routerLink="/" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Accueil</a></li>
+          <li><a routerLink="/a-propos" class="text-gray-400 hover:text-white transition-colors cursor-pointer">À Propos</a></li>
+          <li><a routerLink="/contact" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Contact</a></li>
+          <li><a routerLink="/espace-adherent" class="text-gray-400 hover:text-white transition-colors cursor-pointer">Espace Membre</a></li>
+        </ul>
       </div>
       
-      <!-- Legal -->
-      <div class="col-lg-2 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="footer-section">
-          <h5 class="footer-title">Légal</h5>
-          <ul class="footer-links">
-            <li *ngFor="let link of footerData.legal">
-              <a [routerLink]="link.route">{{ link.name }}</a>
-            </li>
-          </ul>
-        </div>
+      <div>
+        <h3 class="font-bold text-white mb-4">Services</h3>
+        <ul class="space-y-2">
+          <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Gestion Locative</span></li>
+          <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Médiation</span></li>
+          <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Événements</span></li>
+          <li><span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Support Technique</span></li>
+        </ul>
       </div>
       
-      <!-- Social & Newsletter -->
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="footer-section">
-          <h5 class="footer-title">Suivez-nous</h5>
-          <div class="social-links">
-            <a *ngFor="let social of footerData.social" 
-               [href]="social.url" 
-               target="_blank" 
-               [title]="social.name"
-               class="social-link">
-              <i [class]="social.icon"></i>
-            </a>
-          </div>
-          
-          <div class="newsletter">
-            <h6>Newsletter</h6>
-            <p>Restez informé de nos actualités</p>
-            <div class="newsletter-form">
-              <input type="email" placeholder="Votre email" class="form-control">
-              <button class="btn btn-custom btn-sm">
-                <i class="fas fa-paper-plane"></i>
-              </button>
-            </div>
-          </div>
+      <div>
+        <h3 class="font-bold text-white mb-4">Contact</h3>
+        <div class="space-y-2 text-gray-400 text-sm">
+          <p><i class="fa-solid fa-map-marker-alt mr-2"></i>123 Avenue de la République, 75011 Paris</p>
+          <p><i class="fa-solid fa-phone mr-2"></i>01 42 55 67 89</p>
+          <p><i class="fa-solid fa-envelope mr-2"></i>contact&#64;alrcf-association.fr</p>
         </div>
       </div>
     </div>
     
-    <!-- Footer Bottom -->
-    <div class="footer-bottom">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <p class="copyright">
-            © {{ currentYear }} {{ footerData.association.name }}. Tous droits réservés.
-          </p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <button class="btn btn-outline-light btn-sm" (click)="scrollToTop()">
-            <i class="fas fa-arrow-up me-1"></i>Retour en haut
-          </button>
-        </div>
+    <div class="border-t border-gray-800 pt-6 flex md:flex-row flex-col md:items-center md:justify-between">
+      <p class="text-gray-400 text-sm">© 2024 ALRCF Association. Tous droits réservés.</p>
+      <div class="flex space-x-6 mt-4 md:mt-0">
+        <span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Mentions Légales</span>
+        <span class="text-gray-400 hover:text-white transition-colors cursor-pointer">Politique de Confidentialité</span>
+        <span class="text-gray-400 hover:text-white transition-colors cursor-pointer">CGU</span>
       </div>
     </div>
   </div>
