@@ -1,20 +1,48 @@
+# Configuration pour l'API PHP
 RewriteEngine On
 
-# Handle Angular routes
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
-
-# Security headers
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options DENY
-Header always set X-XSS-Protection "1; mode=block"
-
-# CORS headers
-Header always set Access-Control-Allow-Origin "*"
-Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
-
-# Handle preflight requests
+# Gérer les requêtes OPTIONS (CORS preflight)
 RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Headers CORS
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Max-Age "3600"
+    Header always set Access-Control-Allow-Credentials "true"
+</IfModule>
+
+# Gestion des erreurs API
+ErrorDocument 404 "{\"success\":false,\"message\":\"Endpoint non trouvé\"}"
+ErrorDocument 500 "{\"success\":false,\"message\":\"Erreur serveur interne\"}"
+
+# Sécurité - Empêcher l'accès direct aux fichiers de configuration
+<Files "*.php">
+    <RequireAll>
+        Require all granted
+    </RequireAll>
+</Files>
+
+<Files "database.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "email.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Empêcher l'accès aux dossiers sensibles
+RedirectMatch 403 ^/api/logs/
+RedirectMatch 403 ^/api/backups/
+RedirectMatch 403 ^/api/cache/
+RedirectMatch 403 ^/api/uploads/temp/
+
+# Cache pour les réponses API
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
