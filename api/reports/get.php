@@ -4,8 +4,9 @@
  * GET /api/reports/get.php?adherentId=123 (optionnel)
  */
 
-require_once '../config/database.php';
-require_once '../config/cors.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/cors.php';
+require_once __DIR__ . '/../auth/middleware.php';
 
 header('Content-Type: application/json');
 
@@ -17,11 +18,29 @@ try {
     if (!$pdo) {
         throw new Exception('Erreur de connexion à la base de données');
     }
+
+    // Auth verification
+    $user = verifyToken($pdo);
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Non autorisé']);
+        exit;
+    }
+
+    $isAdmin = ($user['role'] === 'admin');
     
-    // Vérifier si un adherentId spécifique est demandé
-    if (isset($_GET['adherentId']) && !empty($_GET['adherentId'])) {
-        $adherentId = (int)$_GET['adherentId'];
-        
+    // Determine filtering scope
+    $filterAdherentId = null;
+
+    if (!$isAdmin) {
+        // Non-admins can only see their own reports
+        $filterAdherentId = $user['id'];
+    } elseif (isset($_GET['adherentId']) && !empty($_GET['adherentId'])) {
+        // Admins can filter by specific adherent if requested
+        $filterAdherentId = (int)$_GET['adherentId'];
+    }
+
+    if ($filterAdherentId) {
         $stmt = $pdo->prepare("
             SELECT r.*, u.firstName, u.lastName 
             FROM reports r 
@@ -29,10 +48,10 @@ try {
             WHERE r.adherentId = ? 
             ORDER BY r.createdAt DESC
         ");
-        $stmt->execute([$adherentId]);
+        $stmt->execute([$filterAdherentId]);
         $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
-        // Récupérer tous les signalements
+        // Admin viewing all reports
         $stmt = $pdo->prepare("
             SELECT r.*, u.firstName, u.lastName 
             FROM reports r 

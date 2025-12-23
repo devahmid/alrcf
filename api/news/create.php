@@ -29,22 +29,28 @@ $isPublished = $input['isPublished'] ?? true;
 $author = $input['author'] ?? 'Administrateur';
 
 try {
-    $database = new Database();
+    $database = createDatabase();
     $db = $database->getConnection();
     
     if ($db === null) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    $query = "INSERT INTO news (title, content, category, author, is_published, published_at, created_at, updated_at) 
-              VALUES (:title, :content, :category, :author, :is_published, NOW(), NOW(), NOW())";
+    // Récupérer l'imageUrl et videoUrl si fournis
+    $imageUrl = $input['imageUrl'] ?? null;
+    $videoUrl = $input['videoUrl'] ?? null;
+    
+    $query = "INSERT INTO news (title, content, category, author, imageUrl, videoUrl, isPublished, publishedAt, createdAt, updatedAt) 
+              VALUES (:title, :content, :category, :author, :imageUrl, :videoUrl, :isPublished, NOW(), NOW(), NOW())";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':content', $content);
     $stmt->bindParam(':category', $category);
     $stmt->bindParam(':author', $author);
-    $stmt->bindParam(':is_published', $isPublished, PDO::PARAM_BOOL);
+    $stmt->bindParam(':imageUrl', $imageUrl);
+    $stmt->bindParam(':videoUrl', $videoUrl);
+    $stmt->bindParam(':isPublished', $isPublished, PDO::PARAM_BOOL);
     
     if ($stmt->execute()) {
         $newsId = $db->lastInsertId();

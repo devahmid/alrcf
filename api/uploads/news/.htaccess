@@ -1,0 +1,26 @@
+# Autoriser l'accès aux fichiers images uniquement
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
+    <RequireAll>
+        Require all granted
+    </RequireAll>
+</FilesMatch>
+
+# Empêcher l'exécution de scripts PHP
+<FilesMatch "\.php$">
+    <RequireAll>
+        Require all denied
+    </RequireAll>
+</FilesMatch>
+
+# Désactiver l'exécution de scripts dans ce répertoire
+Options -ExecCGI
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Headers pour les images
+<IfModule mod_headers.c>
+    Header set Cache-Control "public, max-age=31536000"
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+

@@ -1,0 +1,9 @@
+{
+  "/api": {
+    "target": "https://alrcf.fr",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+

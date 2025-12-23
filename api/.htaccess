@@ -1,9 +1,18 @@
 # Configuration pour l'API PHP
 RewriteEngine On
 
-# Gérer les requêtes OPTIONS (CORS preflight)
-RewriteCond %{REQUEST_METHOD} OPTIONS
-RewriteRule ^(.*)$ $1 [R=200,L]
+# Autoriser l'accès direct aux fichiers dans uploads (images, etc.)
+# Cette règle doit être AVANT la règle qui redirige vers index.php
+# Vérifier si la requête est pour un fichier dans uploads et si le fichier existe
+RewriteCond %{REQUEST_URI} ^/api/uploads/
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f
+RewriteRule ^ - [L]
+
+# Route all requests (including OPTIONS) to index.php
+# Mais seulement si le fichier n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
 
 # Headers CORS
 <IfModule mod_headers.c>

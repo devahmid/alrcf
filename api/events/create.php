@@ -33,26 +33,30 @@ $registrationDeadline = $input['registrationDeadline'] ?? null;
 $isPublished = $input['isPublished'] ?? true;
 
 try {
-    $database = new Database();
+    $database = createDatabase();
     $db = $database->getConnection();
     
     if ($db === null) {
         throw new Exception('Erreur de connexion à la base de données');
     }
     
-    $query = "INSERT INTO events (title, description, start_date, end_date, location, max_participants, current_participants, registration_required, registration_deadline, is_published, created_at, updated_at) 
-              VALUES (:title, :description, :start_date, :end_date, :location, :max_participants, 0, :registration_required, :registration_deadline, :is_published, NOW(), NOW())";
+    // Récupérer l'imageUrl si fourni
+    $imageUrl = $input['imageUrl'] ?? null;
+    
+    $query = "INSERT INTO events (title, description, startDate, endDate, location, imageUrl, maxParticipants, currentParticipants, registrationRequired, registrationDeadline, isPublished, createdAt, updatedAt) 
+              VALUES (:title, :description, :startDate, :endDate, :location, :imageUrl, :maxParticipants, 0, :registrationRequired, :registrationDeadline, :isPublished, NOW(), NOW())";
     
     $stmt = $db->prepare($query);
     $stmt->bindParam(':title', $title);
     $stmt->bindParam(':description', $description);
-    $stmt->bindParam(':start_date', $startDate);
-    $stmt->bindParam(':end_date', $endDate);
+    $stmt->bindParam(':startDate', $startDate);
+    $stmt->bindParam(':endDate', $endDate);
     $stmt->bindParam(':location', $location);
-    $stmt->bindParam(':max_participants', $maxParticipants);
-    $stmt->bindParam(':registration_required', $registrationRequired, PDO::PARAM_BOOL);
-    $stmt->bindParam(':registration_deadline', $registrationDeadline);
-    $stmt->bindParam(':is_published', $isPublished, PDO::PARAM_BOOL);
+    $stmt->bindParam(':imageUrl', $imageUrl);
+    $stmt->bindParam(':maxParticipants', $maxParticipants);
+    $stmt->bindParam(':registrationRequired', $registrationRequired, PDO::PARAM_BOOL);
+    $stmt->bindParam(':registrationDeadline', $registrationDeadline);
+    $stmt->bindParam(':isPublished', $isPublished, PDO::PARAM_BOOL);
     
     if ($stmt->execute()) {
         $eventId = $db->lastInsertId();

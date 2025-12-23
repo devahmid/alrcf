@@ -22,7 +22,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $newsId = $_GET['id'];
 
 try {
-    $database = new Database();
+    $database = createDatabase();
     $db = $database->getConnection();
     
     if ($db === null) {

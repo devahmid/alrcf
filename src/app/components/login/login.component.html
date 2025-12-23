@@ -1,202 +1,176 @@
-<!-- Login Hero Section -->
-<section class="login-hero">
-  <div class="container">
-    <div class="row align-items-center min-vh-100">
-      <div class="col-12 text-center" data-aos="fade-up">
-        <h1 class="hero-title">Connexion</h1>
-        <p class="hero-subtitle">Accédez à votre espace personnel</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Login Hero Section (Optional, keeping it minimal or removing if redundant with full page layout) -->
+<!-- We'll make the whole page a nice split layout or centered layout -->
 
-<!-- Login Form Section -->
-<section class="login-form-section section-padding">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-7">
-        <div class="login-container" data-aos="fade-up">
-          <div class="login-header">
-            <div class="login-logo">
-              <i class="fas fa-users"></i>
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md" data-aos="fade-down">
+    <div class="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center mx-auto shadow-lg mb-6">
+      <i class="fa-solid fa-users text-white text-2xl"></i>
+    </div>
+    <h2 class="text-center text-3xl font-extrabold text-gray-900">Connexion</h2>
+    <p class="mt-2 text-center text-sm text-gray-600">
+      Accédez à votre espace personnel
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md" data-aos="fade-up">
+    <div class="bg-white py-8 px-4 shadow-hard rounded-2xl sm:px-10 border border-gray-100">
+      <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa-solid fa-envelope text-gray-400"></i>
             </div>
-            <h2 class="login-title">Connexion</h2>
-            <p class="login-subtitle">Connectez-vous à votre compte</p>
+            <input id="email" type="email" formControlName="email"
+              class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 sm:text-sm border-gray-300 rounded-lg py-3"
+              placeholder="votre@email.com" [class.border-red-300]="isFieldInvalid('email')"
+              [class.focus:ring-red-500]="isFieldInvalid('email')"
+              [class.focus:border-red-500]="isFieldInvalid('email')">
           </div>
-          
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="form-group mb-3">
-              <label for="email" class="form-label">Email</label>
-              <div class="input-group">
-                <span class="input-group-text">
-                  <i class="fas fa-envelope"></i>
-                </span>
-                <input 
-                  type="email" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid('email')"
-                  id="email" 
-                  formControlName="email"
-                  placeholder="votre@email.com">
-              </div>
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('email')">
-                {{ getFieldError('email') }}
-              </div>
+          <p class="mt-2 text-sm text-red-600" *ngIf="isFieldInvalid('email')">
+            {{ getFieldError('email') }}
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fa-solid fa-lock text-gray-400"></i>
             </div>
-            
-            <div class="form-group mb-3">
-              <label for="password" class="form-label">Mot de passe</label>
-              <div class="input-group">
-                <span class="input-group-text">
-                  <i class="fas fa-lock"></i>
-                </span>
-                <input 
-                  [type]="showPassword ? 'text' : 'password'"
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid('password')"
-                  id="password" 
-                  formControlName="password"
-                  placeholder="Votre mot de passe">
-                <button 
-                  type="button" 
-                  class="btn btn-outline-secondary" 
-                  (click)="togglePasswordVisibility()">
-                  <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-                </button>
-              </div>
-              <div class="invalid-feedback" *ngIf="isFieldInvalid('password')">
-                {{ getFieldError('password') }}
-              </div>
-            </div>
-            
-            <div class="form-group mb-4">
-              <div class="form-check">
-                <input 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  id="rememberMe"
-                  formControlName="rememberMe">
-                <label class="form-check-label" for="rememberMe">
-                  Se souvenir de moi
-                </label>
-              </div>
-            </div>
-            
-            <div class="form-group mb-4" *ngIf="errorMessage">
-              <div class="alert alert-danger-custom">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                {{ errorMessage }}
-              </div>
-            </div>
-            
-            <div class="form-group mb-4">
-              <button 
-                type="submit" 
-                class="btn btn-custom btn-lg w-100"
-                [disabled]="isSubmitting">
-                <span *ngIf="!isSubmitting">
-                  <i class="fas fa-sign-in-alt me-2"></i>Se connecter
-                </span>
-                <span *ngIf="isSubmitting">
-                  <i class="fas fa-spinner fa-spin me-2"></i>Connexion en cours...
-                </span>
-              </button>
-            </div>
-            
-            <div class="form-group text-center">
-              <a href="#" class="forgot-password-link">
-                <i class="fas fa-key me-1"></i>Mot de passe oublié ?
-              </a>
-            </div>
-          </form>
-          
-          <div class="login-footer">
-            <div class="divider">
-              <span>ou</span>
-            </div>
-            
-            <div class="register-link">
-              <p>Vous n'avez pas encore de compte ?</p>
-              <button class="btn btn-outline-custom" (click)="goToHome()">
-                <i class="fas fa-user-plus me-2"></i>Revenir à l'accueil
-              </button>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+              class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 pr-10 sm:text-sm border-gray-300 rounded-lg py-3"
+              placeholder="Votre mot de passe" [class.border-red-300]="isFieldInvalid('password')"
+              [class.focus:ring-red-500]="isFieldInvalid('password')"
+              [class.focus:border-red-500]="isFieldInvalid('password')">
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+              (click)="togglePasswordVisibility()">
+              <i class="fa-solid text-gray-400 hover:text-gray-600"
+                [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
             </div>
           </div>
+          <p class="mt-2 text-sm text-red-600" *ngIf="isFieldInvalid('password')">
+            {{ getFieldError('password') }}
+          </p>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input id="rememberMe" formControlName="rememberMe" type="checkbox"
+              class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded cursor-pointer">
+            <label for="rememberMe" class="ml-2 block text-sm text-gray-900 cursor-pointer">
+              Se souvenir de moi
+            </label>
+          </div>
+
+          <div class="text-sm">
+            <a href="#" class="font-medium text-brand-blue hover:text-blue-500">
+              Mot de passe oublié ?
+            </a>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 border border-red-200">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <i class="fa-solid fa-circle-exclamation text-red-400"></i>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">Erreur de connexion</h3>
+              <div class="mt-2 text-sm text-red-700">
+                <p>{{ errorMessage }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button type="submit" [disabled]="isSubmitting"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!isSubmitting" class="flex items-center">
+              Se connecter <i class="fa-solid fa-arrow-right ml-2"></i>
+            </span>
+            <span *ngIf="isSubmitting" class="flex items-center">
+              <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Connexion...
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Divider -->
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">
+              Pas encore de compte ?
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-6 text-center">
+          <button (click)="goToRegister()" class="text-brand-blue font-medium hover:text-blue-500 transition-colors">
+            Créer un compte
+          </button>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- Features Section -->
-<section class="login-features-section section-padding bg-light">
-  <div class="container">
-    <div class="row">
-      <div class="col-12 text-center mb-5" data-aos="fade-up">
-        <h2 class="section-title">Pourquoi se connecter ?</h2>
-        <p class="section-subtitle">Découvrez les avantages de votre espace personnel</p>
-      </div>
+<!-- Features Section (Simplified) -->
+<section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12" data-aos="fade-up">
+      <h2 class="text-base text-brand-blue font-semibold tracking-wide uppercase">Avantages</h2>
+      <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+        Pourquoi se connecter ?
+      </p>
     </div>
-    
-    <div class="row">
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-user-circle"></i>
-          </div>
-          <h4 class="feature-title">Espace Personnel</h4>
-          <p class="feature-description">Accédez à vos informations personnelles et gérez votre profil en toute sécurité.</p>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="relative p-6 bg-gray-50 rounded-2xl hover:shadow-lg transition-all duration-300" data-aos="fade-up"
+        data-aos-delay="100">
+        <div class="absolute top-6 right-6 text-gray-200 text-6xl opacity-20 transform rotate-12">
+          <i class="fa-solid fa-user-circle"></i>
         </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-brand-blue mb-4">
+          <i class="fa-solid fa-user-shield text-xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Espace Personnel</h3>
+        <p class="text-gray-500">Gérez vos informations et préférences en toute confidentialité.</p>
       </div>
-      
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-credit-card"></i>
-          </div>
-          <h4 class="feature-title">Gestion des Cotisations</h4>
-          <p class="feature-description">Consultez l'historique de vos paiements et gérez vos cotisations en ligne.</p>
+
+      <div class="relative p-6 bg-gray-50 rounded-2xl hover:shadow-lg transition-all duration-300" data-aos="fade-up"
+        data-aos-delay="200">
+        <div class="absolute top-6 right-6 text-gray-200 text-6xl opacity-20 transform rotate-12">
+          <i class="fa-solid fa-file-invoice"></i>
         </div>
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-green-600 mb-4">
+          <i class="fa-solid fa-receipt text-xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Cotisations</h3>
+        <p class="text-gray-500">Suivez vos paiements et téléchargez vos reçus fiscaux.</p>
       </div>
-      
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-calendar"></i>
-          </div>
-          <h4 class="feature-title">Événements</h4>
-          <p class="feature-description">Inscrivez-vous aux événements et restez informé de nos activités.</p>
+
+      <div class="relative p-6 bg-gray-50 rounded-2xl hover:shadow-lg transition-all duration-300" data-aos="fade-up"
+        data-aos-delay="300">
+        <div class="absolute top-6 right-6 text-gray-200 text-6xl opacity-20 transform rotate-12">
+          <i class="fa-solid fa-bullhorn"></i>
         </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-comments"></i>
-          </div>
-          <h4 class="feature-title">Messages</h4>
-          <p class="feature-description">Communiquez directement avec l'équipe et les autres membres.</p>
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 mb-4">
+          <i class="fa-solid fa-newspaper text-xl"></i>
         </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <h4 class="feature-title">Signalements</h4>
-          <p class="feature-description">Signalez des problèmes ou faites des suggestions pour améliorer nos services.</p>
-        </div>
-      </div>
-      
-      <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-newspaper"></i>
-          </div>
-          <h4 class="feature-title">Actualités</h4>
-          <p class="feature-description">Recevez les dernières nouvelles et informations de l'association.</p>
-        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Actualités Privées</h3>
+        <p class="text-gray-500">Accédez aux comptes-rendus d'AG et informations réservées aux membres.</p>
       </div>
     </div>
   </div>

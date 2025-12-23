@@ -1,27 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User, Adherent, Admin } from '../models/user.model';
+import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
-  
-  // Exposer le BehaviorSubject pour les mises à jour directes
-  get currentUserSubject$() {
-    return this.currentUserSubject;
-  }
-  
+  // Signal de l'utilisateur courant (privé en écriture)
+  private currentUserSig: WritableSignal<User | null> = signal<User | null>(null);
+
+  // Signal public en lecture seule
+  public readonly currentUser = this.currentUserSig.asReadonly();
+
+  // Signaux calculés (Computed Signals)
+  public readonly isLoggedIn = computed(() => !!this.currentUserSig());
+  public readonly isAdmin = computed(() => this.currentUserSig()?.role === 'admin');
+  public readonly isAdherent = computed(() => this.currentUserSig()?.role === 'adherent');
+
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {
     // Check if user is logged in on service initialization
     this.checkAuthStatus();
+  }
+
+  // Helper pour compatibilité temporaire si nécessaire (à éviter si possible)
+  getCurrentUser(): User | null {
+    return this.currentUserSig();
   }
 
   login(email: string, password: string): Observable<any> {
@@ -31,7 +39,23 @@ export class AuthService {
           if (response.success && response.user) {
             localStorage.setItem('currentUser', JSON.stringify(response.user));
             localStorage.setItem('token', response.token);
-            this.currentUserSubject.next(response.user);
+            // Mise à jour du signal
+            this.currentUserSig.set(response.user);
+          }
+          return response;
+        })
+      );
+  }
+
+  register(userData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}auth/register.php`, userData)
+      .pipe(
+        map(response => {
+          if (response.success && response.user) {
+            localStorage.setItem('currentUser', JSON.stringify(response.user));
+            localStorage.setItem('token', response.token);
+            // Mise à jour du signal
+            this.currentUserSig.set(response.user);
           }
           return response;
         })
@@ -41,25 +65,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
-    this.currentUserSubject.next(null);
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
-  }
-
-  isLoggedIn(): boolean {
-    return this.currentUserSubject.value !== null;
-  }
-
-  isAdmin(): boolean {
-    const user = this.getCurrentUser();
-    return user ? user.role === 'admin' : false;
-  }
-
-  isAdherent(): boolean {
-    const user = this.getCurrentUser();
-    return user ? user.role === 'adherent' : false;
+    // Mise à jour du signal
+    this.currentUserSig.set(null);
   }
 
   private checkAuthStatus(): void {
@@ -67,7 +74,7 @@ export class AuthService {
     if (user) {
       try {
         const parsedUser = JSON.parse(user);
-        this.currentUserSubject.next(parsedUser);
+        this.currentUserSig.set(parsedUser);
       } catch (error) {
         console.error('Error parsing stored user data:', error);
         this.logout();
@@ -76,11 +83,11 @@ export class AuthService {
   }
 
   updateProfile(userData: Partial<User>): Observable<any> {
-    const user = this.getCurrentUser();
+    const user = this.currentUserSig();
     if (!user) {
       throw new Error('No user logged in');
     }
-    
+
     return this.http.put(`${this.apiUrl}auth/profile.php`, {
       id: user.id,
       ...userData
@@ -88,15 +95,21 @@ export class AuthService {
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
-    const user = this.getCurrentUser();
+    const user = this.currentUserSig();
     if (!user) {
       throw new Error('No user logged in');
     }
-    
+
     return this.http.put(`${this.apiUrl}auth/password.php`, {
       id: user.id,
       currentPassword,
       newPassword
     });
+  }
+
+  // Method to manually update the current user state (e.g. after profile update)
+  setCurrentUser(user: User): void {
+    this.currentUserSig.set(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 }

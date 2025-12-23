@@ -1,165 +1,135 @@
 <!-- Admin Header -->
-<section class="admin-header">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-12 text-center" data-aos="fade-up">
-        <h1 class="header-title">Espace Administration</h1>
-        <p class="header-subtitle">Gestion de l'association ALRCF</p>
-      </div>
+<section class="bg-white shadow-sm border-b border-gray-200 py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center" data-aos="fade-up">
+      <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl font-display text-brand-blue">
+        Espace Administration
+      </h1>
+      <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+        Gestion de l'association ALRCF
+      </p>
     </div>
   </div>
 </section>
 
 <!-- Navigation Tabs -->
-<section class="tabs-section">
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <div class="tabs-container" data-aos="fade-up">
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'dashboard'"
-            (click)="setActiveTab('dashboard')">
-            <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'adherents'"
-            (click)="setActiveTab('adherents')">
-            <i class="fas fa-users me-2"></i>Adhérents
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'news'"
-            (click)="setActiveTab('news')">
-            <i class="fas fa-newspaper me-2"></i>Actualités
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'events'"
-            (click)="setActiveTab('events')">
-            <i class="fas fa-calendar me-2"></i>Événements
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'messages'"
-            (click)="setActiveTab('messages')">
-            <i class="fas fa-envelope me-2"></i>Messages
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'reports'"
-            (click)="setActiveTab('reports')">
-            <i class="fas fa-exclamation-triangle me-2"></i>Signalements
-          </button>
-          <button 
-            class="tab-button" 
-            [class.active]="activeTab === 'subscriptions'"
-            (click)="setActiveTab('subscriptions')">
-            <i class="fas fa-credit-card me-2"></i>Cotisations
-          </button>
-        </div>
-      </div>
+<section class="bg-gray-50 pt-6 pb-2 border-b border-gray-200 sticky top-0 z-30 backdrop-blur-md bg-opacity-90">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex overflow-x-auto space-x-4 pb-2 scrollbar-hide" data-aos="fade-up">
+      <button *ngFor="let tab of [
+          {id: 'dashboard', icon: 'fas fa-tachometer-alt', label: 'Tableau de bord'},
+          {id: 'adherents', icon: 'fas fa-users', label: 'Adhérents'},
+          {id: 'projects', icon: 'fas fa-project-diagram', label: 'Projets'},
+          {id: 'news', icon: 'fas fa-newspaper', label: 'Actualités'},
+          {id: 'events', icon: 'fas fa-calendar', label: 'Événements'},
+          {id: 'announcements', icon: 'fas fa-bullhorn', label: 'Annonces'},
+          {id: 'messages', icon: 'fas fa-envelope', label: 'Messages'},
+          {id: 'reports', icon: 'fas fa-exclamation-triangle', label: 'Signalements'},
+          {id: 'subscriptions', icon: 'fas fa-credit-card', label: 'Cotisations'}
+        ]" class="flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-all whitespace-nowrap" [class]="activeTab === tab.id 
+          ? 'bg-brand-blue text-white shadow-md' 
+          : 'text-gray-600 hover:bg-white hover:text-brand-blue hover:shadow-sm'" (click)="setActiveTab(tab.id)">
+        <i [class]="tab.icon + ' mr-2'"></i> {{ tab.label }}
+      </button>
     </div>
   </div>
 </section>
 
 <!-- Statistics Cards -->
-<section class="stats-section" *ngIf="activeTab === 'dashboard'">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-users"></i>
+<section class="py-8 bg-gray-50" *ngIf="activeTab === 'dashboard'">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Card 1: Users -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-blue-50 text-brand-blue">
+            <i class="fas fa-users text-xl"></i>
           </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.totalAdherents }}</div>
-            <div class="stat-label">Adhérents</div>
-            <div class="stat-subtitle">{{ stats.activeAdherents }} actifs</div>
+          <span class="text-sm font-medium text-green-600 bg-green-50 px-2.5 py-0.5 rounded-full">
+            {{ stats.activeAdherents }} actifs
+          </span>
+        </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.totalAdherents }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Adhérents Total</p>
+      </div>
+
+      <!-- Card 2: News -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="100">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-purple-50 text-purple-600">
+            <i class="fas fa-newspaper text-xl"></i>
           </div>
         </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.totalNews }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Actualités Publiées</p>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-newspaper"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.totalNews }}</div>
-            <div class="stat-label">Actualités</div>
-            <div class="stat-subtitle">Publiées</div>
+
+      <!-- Card 3: Events -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-orange-50 text-orange-600">
+            <i class="fas fa-calendar text-xl"></i>
           </div>
         </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.totalEvents }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Événements Programmés</p>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-calendar"></i>
+
+      <!-- Card 4: Revenue -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="300">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-green-50 text-green-600">
+            <i class="fas fa-euro-sign text-xl"></i>
           </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.totalEvents }}</div>
-            <div class="stat-label">Événements</div>
-            <div class="stat-subtitle">Programmés</div>
+          <span class="text-xs font-medium text-gray-500">Ce mois</span>
+        </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.monthlyRevenue }}€</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Revenus</p>
+      </div>
+
+      <!-- Row 2 -->
+
+      <!-- Messages -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="400">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600">
+            <i class="fas fa-envelope text-xl"></i>
           </div>
         </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.pendingMessages }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Messages en attente</p>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-euro-sign"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.monthlyRevenue }}€</div>
-            <div class="stat-label">Revenus</div>
-            <div class="stat-subtitle">Ce mois</div>
+
+      <!-- Reports -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="500">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-red-50 text-red-600">
+            <i class="fas fa-exclamation-triangle text-xl"></i>
           </div>
         </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.pendingReports }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Signalements en attente</p>
       </div>
-    </div>
-    
-    <div class="row">
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.pendingMessages }}</div>
-            <div class="stat-label">Messages</div>
-            <div class="stat-subtitle">En attente</div>
+
+      <!-- Total Subs -->
+      <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 transition-all hover:shadow-md"
+        data-aos="fade-up" data-aos-delay="600">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 rounded-xl bg-teal-50 text-teal-600">
+            <i class="fas fa-credit-card text-xl"></i>
           </div>
         </div>
+        <h3 class="text-3xl font-bold text-gray-900">{{ stats.totalSubscriptions }}</h3>
+        <p class="text-sm text-gray-500 font-medium mt-1">Cotisations Total</p>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.pendingReports }}</div>
-            <div class="stat-label">Signalements</div>
-            <div class="stat-subtitle">En attente</div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-credit-card"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-number">{{ stats.totalSubscriptions }}</div>
-            <div class="stat-label">Cotisations</div>
-            <div class="stat-subtitle">Total</div>
-          </div>
-        </div>
-      </div>
+
     </div>
   </div>
 </section>
@@ -167,7 +137,7 @@
 <!-- Tab Content -->
 <section class="tab-content-section section-padding">
   <div class="container">
-    
+
     <!-- Dashboard Tab -->
     <div *ngIf="activeTab === 'dashboard'" class="tab-content" data-aos="fade-up">
       <div class="row">
@@ -185,7 +155,7 @@
                   <span class="activity-time">Il y a 2 heures</span>
                 </div>
               </div>
-              
+
               <div class="activity-item">
                 <div class="activity-icon">
                   <i class="fas fa-envelope"></i>
@@ -196,7 +166,7 @@
                   <span class="activity-time">Il y a 4 heures</span>
                 </div>
               </div>
-              
+
               <div class="activity-item">
                 <div class="activity-icon">
                   <i class="fas fa-credit-card"></i>
@@ -210,7 +180,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="col-lg-4">
           <div class="dashboard-widget">
             <h3>Actions Rapides</h3>
@@ -232,52 +202,85 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Adherents Tab -->
     <div *ngIf="activeTab === 'adherents'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Adhérents</h3>
-              <div class="data-filters">
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  placeholder="Rechercher..."
-                  [(ngModel)]="searchTerm">
-                <select class="form-control" [(ngModel)]="statusFilter">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <h3 class="text-xl font-bold text-gray-900">Gestion des Adhérents</h3>
+              <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <input type="text"
+                  class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm transition-all"
+                  placeholder="Rechercher..." [(ngModel)]="searchTerm">
+                <select
+                  class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none text-sm bg-white"
+                  [(ngModel)]="statusFilter">
                   <option value="all">Tous les statuts</option>
                   <option value="active">Actifs</option>
                   <option value="inactive">Inactifs</option>
                 </select>
               </div>
             </div>
-            
-            <div class="data-table">
-              <table class="table">
-                <thead>
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                   <tr>
-                    <th>Nom</th>
-                    <th>Email</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                    </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr *ngFor="let adherent of getPaginatedData()">
-                    <td>{{ adherent.firstName }} {{ adherent.lastName }}</td>
-                    <td>{{ adherent.email }}</td>
-                    <td>
-                      <span class="status-badge" [ngClass]="getStatusClass(adherent.isActive ? 'active' : 'inactive')">
-                        {{ adherent.isActive ? 'Actif' : 'Inactif' }}
-                      </span>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr *ngFor="let adherent of getPaginatedData()" class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div
+                          class="h-8 w-8 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue font-bold mr-3">
+                          {{ adherent.firstName.charAt(0) }}
+                        </div>
+                        <div class="text-sm font-medium text-gray-900">{{ adherent.firstName }} {{ adherent.lastName }}
+                        </div>
+                      </div>
                     </td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-primary me-1">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button class="btn btn-sm btn-outline-danger">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ adherent.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <select 
+                        [value]="adherent.role"
+                        (change)="updateUserRole(adherent.id, $event)"
+                        class="px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white cursor-pointer"
+                        [class.bg-purple-100]="adherent.role === 'admin'"
+                        [class.bg-blue-100]="adherent.role === 'adherent'">
+                        <option value="adherent">Adhérent</option>
+                        <option value="admin">Administrateur</option>
+                      </select>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          [checked]="adherent.isActive"
+                          (change)="updateUserStatus(adherent.id, $event)"
+                          class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-blue/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                        <span class="ml-3 text-xs font-medium text-gray-700">
+                          {{ adherent.isActive ? 'Actif' : 'Inactif' }}
+                        </span>
+                      </label>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button class="text-red-600 hover:text-red-900 transition-colors"
+                        (click)="deleteItem('adherent', adherent.id)"
+                        [disabled]="adherent.id === currentUser?.id"
+                        [title]="adherent.id === currentUser?.id ? 'Vous ne pouvez pas supprimer votre propre compte' : 'Supprimer'">
                         <i class="fas fa-trash"></i>
                       </button>
                     </td>
@@ -285,138 +288,113 @@
                 </tbody>
               </table>
             </div>
-            
-            <div class="pagination" *ngIf="getTotalPages() > 1">
-              <button 
-                class="btn btn-outline-primary" 
-                [disabled]="currentPage === 1"
-                (click)="onPageChange(currentPage - 1)">
+
+            <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between"
+              *ngIf="getTotalPages() > 1">
+              <button
+                class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">
                 Précédent
               </button>
-              <span class="page-info">
+              <span class="text-sm text-gray-700">
                 Page {{ currentPage }} sur {{ getTotalPages() }}
               </span>
-              <button 
-                class="btn btn-outline-primary" 
-                [disabled]="currentPage === getTotalPages()"
-                (click)="onPageChange(currentPage + 1)">
+              <button
+                class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                [disabled]="currentPage === getTotalPages()" (click)="onPageChange(currentPage + 1)">
                 Suivant
               </button>
             </div>
           </div>
         </div>
-        
-        <div class="col-lg-4">
-          <div class="form-container">
-            <h4>Ajouter un Adhérent</h4>
-            <form [formGroup]="adherentForm" (ngSubmit)="onAdherentSubmit()">
-              <div class="mb-3">
-                <label for="firstName" class="form-label">Prénom *</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(adherentForm, 'firstName')"
-                  id="firstName" 
+
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
+            <h4 class="text-lg font-bold text-gray-900 mb-6">Ajouter un Adhérent</h4>
+            <form [formGroup]="adherentForm" (ngSubmit)="onAdherentSubmit()" class="space-y-4">
+              <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(adherentForm, 'firstName')"
+                  [class.search-field-error]="isFieldInvalid(adherentForm, 'firstName')" id="firstName"
                   formControlName="firstName">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'firstName')">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(adherentForm, 'firstName')">
                   {{ getFieldError(adherentForm, 'firstName') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="lastName" class="form-label">Nom *</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(adherentForm, 'lastName')"
-                  id="lastName" 
+
+              <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(adherentForm, 'lastName')" id="lastName"
                   formControlName="lastName">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'lastName')">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(adherentForm, 'lastName')">
                   {{ getFieldError(adherentForm, 'lastName') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="email" class="form-label">Email *</label>
-                <input 
-                  type="email" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(adherentForm, 'email')"
-                  id="email" 
-                  formControlName="email">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'email')">
+
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                <input type="email"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(adherentForm, 'email')" id="email" formControlName="email">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(adherentForm, 'email')">
                   {{ getFieldError(adherentForm, 'email') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="phone" class="form-label">Téléphone</label>
-                <input 
-                  type="tel" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(adherentForm, 'phone')"
-                  id="phone" 
-                  formControlName="phone">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'phone')">
+
+              <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                <input type="tel"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(adherentForm, 'phone')" id="phone" formControlName="phone">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(adherentForm, 'phone')">
                   {{ getFieldError(adherentForm, 'phone') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="address" class="form-label">Adresse</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  id="address" 
-                  formControlName="address">
+
+              <div>
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  id="address" formControlName="address">
               </div>
-              
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="city" class="form-label">Ville</label>
-                  <input 
-                    type="text" 
-                    class="form-control form-control-custom" 
-                    id="city" 
-                    formControlName="city">
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="city" class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                  <input type="text"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                    id="city" formControlName="city">
                 </div>
-                
-                <div class="col-md-6 mb-3">
-                  <label for="postalCode" class="form-label">Code postal</label>
-                  <input 
-                    type="text" 
-                    class="form-control form-control-custom" 
-                    [class.is-invalid]="isFieldInvalid(adherentForm, 'postalCode')"
-                    id="postalCode" 
+
+                <div>
+                  <label for="postalCode" class="block text-sm font-medium text-gray-700 mb-1">CP</label>
+                  <input type="text"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                    [class.border-red-500]="isFieldInvalid(adherentForm, 'postalCode')" id="postalCode"
                     formControlName="postalCode">
-                  <div class="invalid-feedback" *ngIf="isFieldInvalid(adherentForm, 'postalCode')">
-                    {{ getFieldError(adherentForm, 'postalCode') }}
-                  </div>
                 </div>
               </div>
-              
-              <div class="mb-3">
-                <div class="form-check">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    id="isActive"
-                    formControlName="isActive">
-                  <label class="form-check-label" for="isActive">
-                    Adhérent actif
-                  </label>
-                </div>
+
+              <div class="flex items-center">
+                <input class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded" type="checkbox"
+                  id="isActive" formControlName="isActive">
+                <label class="ml-2 block text-sm text-gray-700" for="isActive">
+                  Adhérent actif
+                </label>
               </div>
-              
-              <button 
-                type="submit" 
-                class="btn btn-custom w-100"
+
+              <button type="submit"
+                class="w-full py-2.5 bg-brand-blue text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
                 [disabled]="isLoading">
-                <span *ngIf="!isLoading">
-                  <i class="fas fa-plus me-2"></i>Ajouter
+                <span *ngIf="!isLoading" class="flex items-center justify-center gap-2">
+                  <i class="fas fa-plus"></i> Ajouter
                 </span>
-                <span *ngIf="isLoading">
-                  <i class="fas fa-spinner fa-spin me-2"></i>Ajout...
+                <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+                  <i class="fas fa-spinner fa-spin"></i> Ajout...
                 </span>
               </button>
             </form>
@@ -424,402 +402,969 @@
         </div>
       </div>
     </div>
-    
+
     <!-- News Tab -->
     <div *ngIf="activeTab === 'news'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Actualités</h3>
-            </div>
-            
-            <div class="news-list">
-              <div class="news-card" *ngFor="let article of news" data-aos="fade-up">
-                <div class="news-content">
-                  <h4 class="news-title">{{ article.title }}</h4>
-                  <p class="news-excerpt">{{ article.content | slice:0:150 }}...</p>
-                  <div class="news-meta">
-                    <span class="news-category">{{ article.category }}</span>
-                    <span class="news-date">{{ formatDate(article.publishedAt) }}</span>
-                    <span class="news-status" [ngClass]="getStatusClass(article.isPublished ? 'active' : 'inactive')">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">Gestion des Actualités</h3>
+
+            <div class="space-y-4">
+              <div *ngFor="let article of news"
+                class="bg-white p-5 rounded-xl border border-gray-100 hover:shadow-md transition-all group"
+                data-aos="fade-up">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span
+                        class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 uppercase">{{
+                        article.category }}</span>
+                      <span class="text-xs text-gray-400">{{ formatDate(article.publishedAt) }}</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-brand-blue transition-colors">{{
+                      article.title }}</h4>
+                    <p class="text-sm text-gray-600 line-clamp-2">{{ article.content }}</p>
+                  </div>
+                  <div class="flex items-center gap-2 ml-4">
+                    <span class="px-2 py-1 rounded text-xs font-medium"
+                      [class]="article.isPublished ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'">
                       {{ article.isPublished ? 'Publié' : 'Brouillon' }}
                     </span>
+                    <button 
+                      (click)="editNews(article)"
+                      class="p-2 text-brand-blue hover:bg-blue-50 rounded-lg transition-colors"
+                      [class.bg-blue-100]="editingNews && editingNews.id === article.id"
+                      title="Modifier">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      (click)="deleteItem('news', article.id)"
+                      title="Supprimer">
+                      <i class="fas fa-trash"></i>
+                    </button>
                   </div>
                 </div>
-                <div class="news-actions">
-                  <button class="btn btn-sm btn-outline-primary me-1">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="deleteItem('news', article.id)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
+              </div>
+
+              <div *ngIf="news.length === 0" class="text-center py-12 text-gray-500">
+                <i class="fas fa-newspaper text-4xl mb-4 text-gray-300"></i>
+                <p>Aucune actualité trouvée.</p>
               </div>
             </div>
           </div>
         </div>
-        
-        <div class="col-lg-4">
-          <div class="form-container">
-            <h4>Créer une Actualité</h4>
-            <form [formGroup]="newsForm" (ngSubmit)="onNewsSubmit()">
-              <div class="mb-3">
-                <label for="newsTitle" class="form-label">Titre *</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(newsForm, 'title')"
-                  id="newsTitle" 
-                  formControlName="title">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(newsForm, 'title')">
+
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
+            <h4 class="text-lg font-bold text-gray-900 mb-6">
+              {{ editingNews ? 'Modifier l\'Actualité' : 'Créer une Actualité' }}
+            </h4>
+            <form [formGroup]="newsForm" (ngSubmit)="onNewsSubmit()" class="space-y-4">
+              <div>
+                <label for="newsTitle" class="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(newsForm, 'title')" id="newsTitle" formControlName="title">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(newsForm, 'title')">
                   {{ getFieldError(newsForm, 'title') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="newsCategory" class="form-label">Catégorie *</label>
-                <select 
-                  class="form-control form-control-custom" 
-                  id="newsCategory" 
-                  formControlName="category">
+
+              <div>
+                <label for="newsCategory" class="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
+                <select
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all bg-white"
+                  id="newsCategory" formControlName="category">
                   <option value="general">Général</option>
                   <option value="event">Événement</option>
                   <option value="announcement">Annonce</option>
                   <option value="urgent">Urgent</option>
                 </select>
               </div>
-              
-              <div class="mb-3">
-                <label for="newsContent" class="form-label">Contenu *</label>
-                <textarea 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(newsForm, 'content')"
-                  id="newsContent" 
-                  formControlName="content"
-                  rows="6"
-                  placeholder="Contenu de l'actualité..."></textarea>
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(newsForm, 'content')">
+
+              <div>
+                <label for="newsContent" class="block text-sm font-medium text-gray-700 mb-1">Contenu *</label>
+                <textarea
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(newsForm, 'content')" id="newsContent"
+                  formControlName="content" rows="6" placeholder="Contenu de l'actualité..."></textarea>
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(newsForm, 'content')">
                   {{ getFieldError(newsForm, 'content') }}
+                </p>
+              </div>
+
+              <div>
+                <label for="newsImage" class="block text-sm font-medium text-gray-700 mb-1">
+                  <i class="fas fa-image me-2"></i>Image (optionnel)
+                </label>
+                <input 
+                  type="file" 
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-blue file:text-white hover:file:bg-blue-700"
+                  id="newsImage" 
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                  (change)="onNewsImageSelected($event)">
+                <small class="text-xs text-gray-500 mt-1 block">
+                  <i class="fas fa-info-circle me-1"></i>Formats acceptés: JPG, PNG, GIF, WEBP (max 5MB)
+                </small>
+                
+                <!-- Image Preview -->
+                <div *ngIf="newsImageUrl" class="mt-3">
+                  <div class="relative inline-block">
+                    <img [src]="newsImageUrl" alt="Aperçu" class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+                    <button 
+                      type="button" 
+                      class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                      (click)="removeNewsImage()"
+                      title="Supprimer l'image">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
-              
-              <div class="mb-3">
-                <div class="form-check">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    id="isPublished"
-                    formControlName="isPublished">
-                  <label class="form-check-label" for="isPublished">
-                    Publier immédiatement
-                  </label>
-                </div>
+
+              <div>
+                <label for="newsVideoUrl" class="block text-sm font-medium text-gray-700 mb-1">
+                  <i class="fas fa-video me-2"></i>Lien vidéo (optionnel)
+                </label>
+                <input 
+                  type="url" 
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  id="newsVideoUrl" 
+                  formControlName="videoUrl"
+                  placeholder="https://www.youtube.com/watch?v=... ou https://vimeo.com/...">
+                <small class="text-xs text-gray-500 mt-1 block">
+                  <i class="fas fa-info-circle me-1"></i>URL YouTube, Vimeo ou autre plateforme vidéo
+                </small>
               </div>
-              
-              <button 
-                type="submit" 
-                class="btn btn-custom w-100"
-                [disabled]="isLoading">
-                <span *ngIf="!isLoading">
-                  <i class="fas fa-plus me-2"></i>Créer
-                </span>
-                <span *ngIf="isLoading">
-                  <i class="fas fa-spinner fa-spin me-2"></i>Création...
-                </span>
-              </button>
+
+              <div class="flex items-center">
+                <input class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded" type="checkbox"
+                  id="isPublished" formControlName="isPublished">
+                <label class="ml-2 block text-sm text-gray-700" for="isPublished">
+                  Publier immédiatement
+                </label>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="submit"
+                  class="flex-1 py-2.5 bg-brand-blue text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <span *ngIf="!isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas" [ngClass]="editingNews ? 'fa-save' : 'fa-plus'"></i>
+                    {{ editingNews ? 'Modifier' : 'Créer' }}
+                  </span>
+                  <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    {{ editingNews ? 'Modification...' : 'Création...' }}
+                  </span>
+                </button>
+                <button 
+                  type="button"
+                  *ngIf="editingNews"
+                  (click)="cancelNewsEdit()"
+                  class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    
+
     <!-- Events Tab -->
     <div *ngIf="activeTab === 'events'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-lg-8">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Événements</h3>
-            </div>
-            
-            <div class="events-list">
-              <div class="event-card" *ngFor="let event of events" data-aos="fade-up">
-                <div class="event-content">
-                  <h4 class="event-title">{{ event.title }}</h4>
-                  <p class="event-description">{{ event.description | slice:0:150 }}...</p>
-                  <div class="event-meta">
-                    <span class="event-date">{{ formatDate(event.startDate) }}</span>
-                    <span class="event-location">{{ event.location }}</span>
-                    <span class="event-participants" *ngIf="event.maxParticipants">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">Gestion des Événements</h3>
+
+            <div class="space-y-4">
+              <div *ngFor="let event of events"
+                class="bg-white p-5 rounded-xl border border-gray-100 hover:shadow-md transition-all group"
+                data-aos="fade-up">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-4 mb-2">
+                      <span class="flex items-center text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
+                        <i class="fas fa-clock mr-1.5 text-brand-blue"></i>
+                        {{ formatDate(event.startDate) }}
+                      </span>
+                      <span class="flex items-center text-xs text-gray-600">
+                        <i class="fas fa-map-marker-alt mr-1.5 text-gray-400"></i>
+                        {{ event.location }}
+                      </span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-brand-blue transition-colors">{{
+                      event.title }}</h4>
+                    <p class="text-sm text-gray-600 line-clamp-2 mb-3">{{ event.description }}</p>
+
+                    <div class="flex items-center text-xs text-gray-500" *ngIf="event.maxParticipants">
+                      <div class="w-full max-w-[100px] bg-gray-200 rounded-full h-1.5 mr-2">
+                        <div class="bg-brand-blue h-1.5 rounded-full"
+                          [style.width.%]="(event.currentParticipants / event.maxParticipants) * 100"></div>
+                      </div>
                       {{ event.currentParticipants }}/{{ event.maxParticipants }} participants
-                    </span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 ml-4">
+                    <button 
+                      (click)="editEvent(event)"
+                      class="p-2 text-brand-blue hover:bg-blue-50 rounded-lg transition-colors"
+                      [class.bg-blue-100]="editingEvent && editingEvent.id === event.id"
+                      title="Modifier">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      (click)="deleteItem('event', event.id)"
+                      title="Supprimer">
+                      <i class="fas fa-trash"></i>
+                    </button>
                   </div>
                 </div>
-                <div class="event-actions">
-                  <button class="btn btn-sm btn-outline-primary me-1">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger" (click)="deleteItem('event', event.id)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
+              </div>
+
+              <div *ngIf="events.length === 0" class="text-center py-12 text-gray-500">
+                <i class="fas fa-calendar text-4xl mb-4 text-gray-300"></i>
+                <p>Aucun événement programmé.</p>
               </div>
             </div>
           </div>
         </div>
-        
-        <div class="col-lg-4">
-          <div class="form-container">
-            <h4>Créer un Événement</h4>
-            <form [formGroup]="eventForm" (ngSubmit)="onEventSubmit()">
-              <div class="mb-3">
-                <label for="eventTitle" class="form-label">Titre *</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(eventForm, 'title')"
-                  id="eventTitle" 
-                  formControlName="title">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'title')">
+
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
+            <h4 class="text-lg font-bold text-gray-900 mb-6">
+              {{ editingEvent ? 'Modifier l\'Événement' : 'Créer un Événement' }}
+            </h4>
+            <form [formGroup]="eventForm" (ngSubmit)="onEventSubmit()" class="space-y-4">
+              <div>
+                <label for="eventTitle" class="block text-sm font-medium text-gray-700 mb-1">Titre *</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(eventForm, 'title')" id="eventTitle" formControlName="title">
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(eventForm, 'title')">
                   {{ getFieldError(eventForm, 'title') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="mb-3">
-                <label for="eventDescription" class="form-label">Description *</label>
-                <textarea 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(eventForm, 'description')"
-                  id="eventDescription" 
-                  formControlName="description"
-                  rows="4"
-                  placeholder="Description de l'événement..."></textarea>
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'description')">
+
+              <div>
+                <label for="eventDescription" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                <textarea
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(eventForm, 'description')" id="eventDescription"
+                  formControlName="description" rows="4" placeholder="Description de l'événement..."></textarea>
+                <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid(eventForm, 'description')">
                   {{ getFieldError(eventForm, 'description') }}
-                </div>
+                </p>
               </div>
-              
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="eventStartDate" class="form-label">Date de début *</label>
-                  <input 
-                    type="datetime-local" 
-                    class="form-control form-control-custom" 
-                    [class.is-invalid]="isFieldInvalid(eventForm, 'startDate')"
-                    id="eventStartDate" 
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label for="eventStartDate" class="block text-sm font-medium text-gray-700 mb-1">Début *</label>
+                  <input type="datetime-local"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all text-sm"
+                    [class.border-red-500]="isFieldInvalid(eventForm, 'startDate')" id="eventStartDate"
                     formControlName="startDate">
-                  <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'startDate')">
-                    {{ getFieldError(eventForm, 'startDate') }}
-                  </div>
                 </div>
-                
-                <div class="col-md-6 mb-3">
-                  <label for="eventEndDate" class="form-label">Date de fin</label>
-                  <input 
-                    type="datetime-local" 
-                    class="form-control form-control-custom" 
-                    id="eventEndDate" 
-                    formControlName="endDate">
+
+                <div>
+                  <label for="eventEndDate" class="block text-sm font-medium text-gray-700 mb-1">Fin</label>
+                  <input type="datetime-local"
+                    class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all text-sm"
+                    id="eventEndDate" formControlName="endDate">
                 </div>
               </div>
-              
-              <div class="mb-3">
-                <label for="eventLocation" class="form-label">Lieu *</label>
-                <input 
-                  type="text" 
-                  class="form-control form-control-custom" 
-                  [class.is-invalid]="isFieldInvalid(eventForm, 'location')"
-                  id="eventLocation" 
+
+              <div>
+                <label for="eventLocation" class="block text-sm font-medium text-gray-700 mb-1">Lieu *</label>
+                <input type="text"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  [class.border-red-500]="isFieldInvalid(eventForm, 'location')" id="eventLocation"
                   formControlName="location">
-                <div class="invalid-feedback" *ngIf="isFieldInvalid(eventForm, 'location')">
-                  {{ getFieldError(eventForm, 'location') }}
-                </div>
               </div>
-              
-              <div class="mb-3">
-                <label for="eventMaxParticipants" class="form-label">Participants max</label>
-                <input 
-                  type="number" 
-                  class="form-control form-control-custom" 
-                  id="eventMaxParticipants" 
-                  formControlName="maxParticipants">
+
+              <div>
+                <label for="eventMaxParticipants" class="block text-sm font-medium text-gray-700 mb-1">Participants
+                  max</label>
+                <input type="number"
+                  class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all"
+                  id="eventMaxParticipants" formControlName="maxParticipants">
               </div>
-              
-              <div class="mb-3">
-                <div class="form-check">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    id="registrationRequired"
-                    formControlName="registrationRequired">
-                  <label class="form-check-label" for="registrationRequired">
-                    Inscription requise
-                  </label>
-                </div>
+
+              <div class="flex items-center">
+                <input class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded" type="checkbox"
+                  id="registrationRequired" formControlName="registrationRequired">
+                <label class="ml-2 block text-sm text-gray-700" for="registrationRequired">
+                  Inscription requise
+                </label>
               </div>
-              
-              <div class="mb-3">
-                <div class="form-check">
-                  <input 
-                    class="form-check-input" 
-                    type="checkbox" 
-                    id="eventPublished"
-                    formControlName="isPublished">
-                  <label class="form-check-label" for="eventPublished">
-                    Publier immédiatement
-                  </label>
-                </div>
+
+              <div class="flex items-center">
+                <input class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded" type="checkbox"
+                  id="eventPublished" formControlName="isPublished">
+                <label class="ml-2 block text-sm text-gray-700" for="eventPublished">
+                  Publier immédiatement
+                </label>
               </div>
-              
-              <button 
-                type="submit" 
-                class="btn btn-custom w-100"
-                [disabled]="isLoading">
-                <span *ngIf="!isLoading">
-                  <i class="fas fa-plus me-2"></i>Créer
-                </span>
-                <span *ngIf="isLoading">
-                  <i class="fas fa-spinner fa-spin me-2"></i>Création...
-                </span>
-              </button>
+
+              <div class="flex gap-2">
+                <button type="submit"
+                  class="flex-1 py-2.5 bg-brand-blue text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <span *ngIf="!isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas" [ngClass]="editingEvent ? 'fa-save' : 'fa-plus'"></i>
+                    {{ editingEvent ? 'Modifier' : 'Créer' }}
+                  </span>
+                  <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    {{ editingEvent ? 'Modification...' : 'Création...' }}
+                  </span>
+                </button>
+                <button 
+                  type="button"
+                  *ngIf="editingEvent"
+                  (click)="cancelEventEdit()"
+                  class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
     </div>
-    
+
+    <!-- Projects Tab -->
+    <div *ngIf="activeTab === 'projects'" class="tab-content" data-aos="fade-up">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">Gestion des Projets</h3>
+
+            <div class="space-y-4">
+              <div *ngFor="let project of projects"
+                class="bg-white p-5 rounded-xl border border-gray-100 hover:shadow-md transition-all group"
+                data-aos="fade-up">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <div class="flex items-center gap-4 mb-2">
+                      <span class="px-2 py-1 rounded text-xs font-semibold"
+                        [ngClass]="{
+                          'bg-blue-100 text-blue-700': project.status === 'planning',
+                          'bg-green-100 text-green-700': project.status === 'in_progress',
+                          'bg-gray-100 text-gray-700': project.status === 'completed',
+                          'bg-red-100 text-red-700': project.status === 'cancelled'
+                        }">
+                        {{ project.status === 'planning' ? 'Planifié' : 
+                           project.status === 'in_progress' ? 'En cours' : 
+                           project.status === 'completed' ? 'Terminé' : 'Annulé' }}
+                      </span>
+                      <span class="px-2 py-1 rounded text-xs font-semibold bg-purple-100 text-purple-700">
+                        {{ project.category }}
+                      </span>
+                      <span class="px-2 py-1 rounded text-xs font-semibold"
+                        [ngClass]="{
+                          'bg-yellow-100 text-yellow-700': project.priority === 'low',
+                          'bg-orange-100 text-orange-700': project.priority === 'medium',
+                          'bg-red-100 text-red-700': project.priority === 'high' || project.priority === 'urgent'
+                        }">
+                        {{ project.priority }}
+                      </span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-brand-blue transition-colors">{{
+                      project.title }}</h4>
+                    <p class="text-sm text-gray-600 line-clamp-2 mb-3">{{ project.description }}</p>
+
+                    <div class="flex items-center gap-4 text-xs text-gray-500 mb-2">
+                      <span *ngIf="project.startDate">
+                        <i class="fas fa-calendar-alt mr-1"></i>
+                        {{ formatDate(project.startDate) }}
+                      </span>
+                      <span *ngIf="project.budget">
+                        <i class="fas fa-euro-sign mr-1"></i>
+                        {{ project.budget }}€
+                      </span>
+                    </div>
+
+                    <div class="w-full bg-gray-200 rounded-full h-2 mb-2" *ngIf="project.progress !== undefined">
+                      <div class="bg-brand-blue h-2 rounded-full transition-all" [style.width.%]="project.progress"></div>
+                    </div>
+                    <p class="text-xs text-gray-500">{{ project.progress || 0 }}% complété</p>
+                  </div>
+                  <div class="flex items-center gap-2 ml-4">
+                    <button 
+                      (click)="editProject(project)"
+                      class="p-2 text-brand-blue hover:bg-blue-50 rounded-lg transition-colors"
+                      [class.bg-blue-100]="editingProject && editingProject.id === project.id"
+                      title="Modifier">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      (click)="deleteItem('project', project.id)"
+                      title="Supprimer">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="projects.length === 0" class="text-center py-12 text-gray-500">
+                <i class="fas fa-project-diagram text-4xl mb-4 text-gray-300"></i>
+                <p>Aucun projet pour le moment</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-4">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">
+              {{ editingProject ? 'Modifier le Projet' : 'Nouveau Projet' }}
+            </h3>
+
+            <form [formGroup]="projectForm" (ngSubmit)="onProjectSubmit()" class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectTitle">Titre *</label>
+                <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                  id="projectTitle" type="text" formControlName="title" placeholder="Titre du projet">
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectDescription">Description *</label>
+                <textarea class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                  id="projectDescription" formControlName="description" rows="4" placeholder="Description du projet"></textarea>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectCategory">Catégorie *</label>
+                  <select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectCategory" formControlName="category">
+                    <option value="culturel">Culturel</option>
+                    <option value="sportif">Sportif</option>
+                    <option value="social">Social</option>
+                    <option value="environnement">Environnement</option>
+                    <option value="autre">Autre</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectStatus">Statut *</label>
+                  <select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectStatus" formControlName="status">
+                    <option value="planning">Planifié</option>
+                    <option value="in_progress">En cours</option>
+                    <option value="completed">Terminé</option>
+                    <option value="cancelled">Annulé</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectPriority">Priorité *</label>
+                  <select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectPriority" formControlName="priority">
+                    <option value="low">Basse</option>
+                    <option value="medium">Moyenne</option>
+                    <option value="high">Haute</option>
+                    <option value="urgent">Urgente</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectProgress">Progression (%)</label>
+                  <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectProgress" type="number" formControlName="progress" min="0" max="100">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectStartDate">Date de début</label>
+                  <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectStartDate" type="date" formControlName="startDate">
+                </div>
+
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectEndDate">Date de fin</label>
+                  <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                    id="projectEndDate" type="date" formControlName="endDate">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectBudget">Budget (€)</label>
+                <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                  id="projectBudget" type="number" formControlName="budget" min="0" step="0.01">
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectImageUrl">URL de l'image</label>
+                <input class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                  id="projectImageUrl" type="text" formControlName="imageUrl" placeholder="https://...">
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="projectAssignedTo">Assigné à</label>
+                <select class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+                  id="projectAssignedTo" formControlName="assignedTo">
+                  <option value="">Non assigné</option>
+                  <option *ngFor="let user of adherents" [value]="user.id">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="flex items-center">
+                <input class="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded" type="checkbox"
+                  id="projectPublic" formControlName="isPublic">
+                <label class="ml-2 block text-sm text-gray-700" for="projectPublic">
+                  Projet public
+                </label>
+              </div>
+
+              <div class="flex gap-2">
+                <button type="submit"
+                  class="flex-1 py-2.5 bg-brand-blue text-white rounded-lg font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <span *ngIf="!isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas" [ngClass]="editingProject ? 'fa-save' : 'fa-plus'"></i>
+                    {{ editingProject ? 'Modifier' : 'Créer' }}
+                  </span>
+                  <span *ngIf="isLoading" class="flex items-center justify-center gap-2">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    {{ editingProject ? 'Modification...' : 'Création...' }}
+                  </span>
+                </button>
+                <button 
+                  type="button"
+                  *ngIf="editingProject"
+                  (click)="cancelProjectEdit()"
+                  class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                  [disabled]="isLoading">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Messages Tab -->
     <div *ngIf="activeTab === 'messages'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-12">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Messages</h3>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 font-display">Messages Reçus</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div *ngFor="let messageItem of messages"
+            class="flex flex-col bg-white p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all group relative overflow-hidden"
+            data-aos="fade-up">
+            <div class="absolute top-0 left-0 w-1 h-full"
+              [class]="messageItem.status === 'read' ? 'bg-gray-200' : 'bg-brand-blue'">
             </div>
-            
-            <div class="messages-list">
-              <div class="message-card" *ngFor="let message of messages" data-aos="fade-up">
-                <div class="message-header">
-                  <h4 class="message-subject">{{ message.subject }}</h4>
-                  <div class="message-meta">
-                    <span class="message-status" [ngClass]="getStatusClass(message.status)">
-                      {{ message.status | titlecase }}
-                    </span>
-                    <span class="message-date">{{ formatDate(message.createdAt) }}</span>
-                  </div>
+
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold">
+                  {{ (messageItem.firstName || messageItem.name || 'U').charAt(0).toUpperCase() }}
                 </div>
-                <div class="message-content">
-                  <p class="message-text">{{ message.message }}</p>
-                  <div class="message-info">
-                    <strong>De:</strong> {{ message.name }} ({{ message.email }})
-                  </div>
-                  <div class="message-actions">
-                    <button 
-                      class="btn btn-sm btn-outline-success me-1"
-                      (click)="updateMessageStatus(message.id, 'read')">
-                      <i class="fas fa-check me-1"></i>Marquer lu
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-outline-primary me-1"
-                      (click)="updateMessageStatus(message.id, 'replied')">
-                      <i class="fas fa-reply me-1"></i>Répondre
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-outline-secondary"
-                      (click)="updateMessageStatus(message.id, 'closed')">
-                      <i class="fas fa-times me-1"></i>Fermer
-                    </button>
-                  </div>
+                <div>
+                  <h4 class="text-base font-bold text-gray-900">
+                    {{ messageItem.firstName && messageItem.lastName 
+                      ? messageItem.firstName + ' ' + messageItem.lastName 
+                      : (messageItem.name || 'Utilisateur') }}
+                  </h4>
+                  <p class="text-xs text-gray-500">{{ formatDate(messageItem.createdAt) }}</p>
                 </div>
               </div>
+              <span *ngIf="messageItem.status !== 'read' && messageItem.status !== 'replied'"
+                class="bg-blue-100 text-brand-blue text-xs font-bold px-2 py-1 rounded-full">
+                Nouveau
+              </span>
+            </div>
+
+            <div class="mb-4 flex-grow min-h-[80px]">
+              <h5 class="text-sm font-bold text-gray-800 mb-2">{{ messageItem.subject || 'Sans sujet' }}</h5>
+              <div class="text-sm text-gray-600 whitespace-pre-wrap break-words">
+                <p class="line-clamp-3" [title]="messageItem.message">{{ messageItem.message || 'Aucun contenu' }}</p>
+              </div>
+              <div *ngIf="messageItem.email" class="mt-2 text-xs text-gray-500">
+                <i class="fas fa-envelope mr-1"></i>{{ messageItem.email }}
+              </div>
+              <div *ngIf="messageItem.phone" class="mt-1 text-xs text-gray-500">
+                <i class="fas fa-phone mr-1"></i>{{ messageItem.phone }}
+              </div>
+            </div>
+
+            <div class="flex gap-2 mt-auto pt-4 border-t border-gray-50">
+              <button
+                class="flex-1 py-2 text-sm font-medium text-brand-blue bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                (click)="openReplyModal(messageItem)">
+                <i class="fas fa-reply mr-2"></i>Répondre
+              </button>
+              <button class="px-3 py-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                (click)="deleteItem('message', messageItem.id)">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
           </div>
         </div>
+
+        <div *ngIf="messages.length === 0" class="text-center py-12 text-gray-500">
+          <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
+          <p>Aucun message reçu.</p>
+        </div>
       </div>
     </div>
-    
+
+    <!-- Reply Modal -->
+    <div *ngIf="showReplyModal && messageToReply" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="closeReplyModal()">
+      <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+        <div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+          <h3 class="text-xl font-bold text-gray-900">Répondre au message</h3>
+          <button (click)="closeReplyModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <i class="fas fa-times text-2xl"></i>
+          </button>
+        </div>
+
+        <div class="p-6">
+          <!-- Original Message -->
+          <div class="mb-6 p-4 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">
+                {{ (messageToReply.firstName || messageToReply.name || 'U').charAt(0).toUpperCase() }}
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900">
+                  {{ messageToReply.firstName && messageToReply.lastName 
+                    ? messageToReply.firstName + ' ' + messageToReply.lastName 
+                    : (messageToReply.name || 'Utilisateur') }}
+                </h4>
+                <p class="text-sm text-gray-500">{{ messageToReply.email }}</p>
+              </div>
+            </div>
+            <div class="mb-2">
+              <h5 class="font-semibold text-gray-800 mb-1">{{ messageToReply.subject }}</h5>
+              <p class="text-sm text-gray-600 whitespace-pre-wrap">{{ messageToReply.message }}</p>
+            </div>
+            <p class="text-xs text-gray-400">{{ formatDate(messageToReply.createdAt) }}</p>
+          </div>
+
+          <!-- Reply Form -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Votre réponse *</label>
+            <textarea
+              [(ngModel)]="replyText"
+              class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-blue focus:border-brand-blue outline-none transition-all resize-none"
+              rows="6"
+              placeholder="Tapez votre réponse ici..."></textarea>
+            <p class="mt-2 text-xs text-gray-500">Cette réponse sera envoyée à l'expéditeur du message.</p>
+          </div>
+        </div>
+
+        <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 flex justify-end gap-3">
+          <button
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            (click)="closeReplyModal()"
+            [disabled]="isLoading">
+            Annuler
+          </button>
+          <button
+            class="px-4 py-2 text-sm font-medium text-white bg-brand-blue rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            (click)="sendReply()"
+            [disabled]="!replyText || replyText.trim().length === 0 || isLoading">
+            <span *ngIf="!isLoading">
+              <i class="fas fa-paper-plane mr-2"></i>Envoyer la réponse
+            </span>
+            <span *ngIf="isLoading">
+              <i class="fas fa-spinner fa-spin mr-2"></i>Envoi...
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Reports Tab -->
     <div *ngIf="activeTab === 'reports'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-12">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Signalements</h3>
-            </div>
-            
-            <div class="reports-list">
-              <div class="report-card" *ngFor="let report of reports" data-aos="fade-up">
-                <div class="report-header">
-                  <h4 class="report-title">{{ report.title }}</h4>
-                  <div class="report-meta">
-                    <span class="report-category">{{ report.category | titlecase }}</span>
-                    <span class="report-priority" [ngClass]="'priority-' + report.priority">
-                      {{ report.priority | titlecase }}
-                    </span>
-                    <span class="report-status" [ngClass]="getStatusClass(report.status)">
-                      {{ report.status | titlecase }}
-                    </span>
-                  </div>
-                </div>
-                <div class="report-content">
-                  <p class="report-description">{{ report.description }}</p>
-                  <div class="report-actions">
-                    <button 
-                      class="btn btn-sm btn-outline-primary me-1"
-                      (click)="updateReportStatus(report.id, 'in_progress')">
-                      <i class="fas fa-play me-1"></i>En cours
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-outline-success me-1"
-                      (click)="updateReportStatus(report.id, 'resolved')">
-                      <i class="fas fa-check me-1"></i>Résolu
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-outline-secondary"
-                      (click)="updateReportStatus(report.id, 'closed')">
-                      <i class="fas fa-times me-1"></i>Fermer
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 font-display">Signalements</h3>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sujet</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let report of reports" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {{ report.category | titlecase }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ report.title }}
+                </td>
+                <td class="px-6 py-4">
+                  <p class="text-sm text-gray-900 line-clamp-1 max-w-xs">{{ report.description }}</p>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="{
+                      'bg-green-100 text-green-800': report.status === 'resolved',
+                      'bg-yellow-100 text-yellow-800': report.status === 'pending',
+                      'bg-blue-100 text-blue-800': report.status === 'in_progress',
+                      'bg-gray-100 text-gray-800': report.status === 'closed'
+                    }">
+                    {{ report.status | titlecase }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(report.createdAt) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button class="text-brand-blue hover:text-blue-900 mr-3 transition-colors">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="text-green-600 hover:text-green-900 mr-3 transition-colors"
+                    (click)="updateReportStatus(report.id, 'resolved')">
+                    <i class="fas fa-check"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="reports.length === 0" class="text-center py-12 text-gray-500">
+            <i class="fas fa-check-circle text-4xl mb-4 text-gray-300"></i>
+            <p>Aucun signalement en cours.</p>
           </div>
         </div>
       </div>
     </div>
-    
+
+    <!-- Announcements Tab -->
+    <div *ngIf="activeTab === 'announcements'" class="tab-content" data-aos="fade-up">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-gray-900 font-display">Gestion des Annonces</h3>
+          <div class="flex gap-2">
+            <button 
+              class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+              [class]="announcementStatusFilter === 'all' 
+                ? 'bg-brand-blue text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              (click)="announcementStatusFilter = 'all'; loadAnnouncements()">
+              Toutes
+            </button>
+            <button 
+              class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+              [class]="announcementStatusFilter === 'pending' 
+                ? 'bg-yellow-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              (click)="announcementStatusFilter = 'pending'; loadAnnouncements()">
+              En attente ({{ getPendingAnnouncementsCount() }})
+            </button>
+            <button 
+              class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+              [class]="announcementStatusFilter === 'approved' 
+                ? 'bg-green-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              (click)="announcementStatusFilter = 'approved'; loadAnnouncements()">
+              Approuvées
+            </button>
+            <button 
+              class="px-4 py-2 text-sm font-medium rounded-lg transition-all"
+              [class]="announcementStatusFilter === 'rejected' 
+                ? 'bg-red-500 text-white' 
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              (click)="announcementStatusFilter = 'rejected'; loadAnnouncements()">
+              Rejetées
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titre</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Auteur</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let announcement of filteredAnnouncements" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4">
+                  <div class="text-sm font-medium text-gray-900">{{ announcement.title }}</div>
+                  <div class="text-xs text-gray-500 line-clamp-1 max-w-xs mt-1">{{ announcement.description }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">
+                    {{ announcement.firstName }} {{ announcement.lastName }}
+                  </div>
+                  <div class="text-xs text-gray-500">{{ announcement.userEmail }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {{ getCategoryLabel(announcement.category) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ announcement.price ? formatPrice(announcement.price) : 'N/A' }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" [ngClass]="{
+                      'bg-green-100 text-green-800': announcement.status === 'approved',
+                      'bg-yellow-100 text-yellow-800': announcement.status === 'pending',
+                      'bg-red-100 text-red-800': announcement.status === 'rejected',
+                      'bg-gray-100 text-gray-800': announcement.status === 'expired'
+                    }">
+                    {{ getStatusLabel(announcement.status) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(announcement.createdAt) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex items-center gap-2">
+                    <button 
+                      *ngIf="announcement.status === 'pending'"
+                      class="text-green-600 hover:text-green-900 transition-colors"
+                      (click)="validateAnnouncement(announcement.id, 'approve')"
+                      title="Approuver">
+                      <i class="fas fa-check"></i>
+                    </button>
+                    <button 
+                      *ngIf="announcement.status === 'pending'"
+                      class="text-red-600 hover:text-red-900 transition-colors"
+                      (click)="showRejectDialog(announcement)"
+                      title="Rejeter">
+                      <i class="fas fa-times"></i>
+                    </button>
+                    <button 
+                      class="text-brand-blue hover:text-blue-900 transition-colors"
+                      (click)="viewAnnouncementDetails(announcement)"
+                      title="Voir les détails">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button 
+                      class="text-red-600 hover:text-red-900 transition-colors"
+                      (click)="deleteAnnouncement(announcement.id)"
+                      title="Supprimer">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="filteredAnnouncements.length === 0" class="text-center py-12 text-gray-500">
+            <i class="fas fa-bullhorn text-4xl mb-4 text-gray-300"></i>
+            <p>Aucune annonce trouvée.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reject Dialog -->
+      <div *ngIf="showRejectModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full mx-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Rejeter l'annonce</h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Raison du rejet *</label>
+            <textarea 
+              [(ngModel)]="rejectionReason"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent"
+              rows="4"
+              placeholder="Expliquez pourquoi cette annonce est rejetée..."></textarea>
+          </div>
+          <div class="flex gap-3 justify-end">
+            <button 
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              (click)="cancelReject()">
+              Annuler
+            </button>
+            <button 
+              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+              (click)="confirmReject()"
+              [disabled]="!rejectionReason || rejectionReason.trim().length === 0">
+              Rejeter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Subscriptions Tab -->
     <div *ngIf="activeTab === 'subscriptions'" class="tab-content" data-aos="fade-up">
-      <div class="row">
-        <div class="col-12">
-          <div class="data-container">
-            <div class="data-header">
-              <h3>Gestion des Cotisations</h3>
-            </div>
-            
-            <div class="subscriptions-list">
-              <div class="subscription-card" *ngFor="let subscription of subscriptions" data-aos="fade-up">
-                <div class="subscription-header">
-                  <div class="subscription-period">{{ subscription.period }}</div>
-                  <div class="subscription-status" [ngClass]="getStatusClass(subscription.status)">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 font-display">Suivi des Cotisations</h3>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adhérent ID
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Facture</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let subscription of subscriptions" class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">#{{ subscription.adherentId }}</div>
+                  <div class="text-xs text-gray-500">ID: {{ subscription.id }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                  {{ subscription.amount }}€
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatDate(subscription.paymentDate) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                    [class]="subscription.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
                     {{ subscription.status | titlecase }}
-                  </div>
-                </div>
-                <div class="subscription-content">
-                  <div class="subscription-amount">{{ subscription.amount }}€</div>
-                  <div class="subscription-date">{{ formatDate(subscription.paymentDate) }}</div>
-                  <div class="subscription-method">{{ subscription.paymentMethod | titlecase }}</div>
-                  <div class="subscription-reference" *ngIf="subscription.reference">
-                    Réf: {{ subscription.reference }}
-                  </div>
-                </div>
-              </div>
-            </div>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <button class="text-gray-400 hover:text-brand-blue transition-colors">
+                    <i class="fas fa-file-pdf"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div *ngIf="subscriptions.length === 0" class="text-center py-12 text-gray-500">
+            <i class="fas fa-receipt text-4xl mb-4 text-gray-300"></i>
+            <p>Aucune cotisation enregistrée.</p>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </section>

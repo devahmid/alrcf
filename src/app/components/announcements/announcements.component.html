@@ -1,0 +1,241 @@
+<!-- Header Section -->
+<section class="relative py-20 bg-gradient-to-br from-primary-dark via-primary to-primary-light">
+  <div class="container-custom">
+    <div class="text-center text-white" data-aos="fade-up">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Annonces entre voisins</h1>
+      <p class="text-xl text-gray-200 max-w-2xl mx-auto">
+        Découvrez les services, emplois, ventes et locations proposés par vos voisins
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Filters Section -->
+<section class="py-8 bg-gray-50">
+  <div class="container-custom">
+    <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-md">
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+            placeholder="Rechercher une annonce..."
+            class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+          />
+          <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="w-full md:w-auto">
+        <select
+          [(ngModel)]="selectedCategory"
+          (change)="onCategoryChange()"
+          class="w-full md:w-auto px-4 py-3 rounded-xl border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all bg-white"
+        >
+          <option *ngFor="let cat of categories" [value]="cat.value">
+            {{ cat.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Announcements Grid -->
+<section class="py-12">
+  <div class="container-custom">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-20">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <p class="mt-4 text-gray-600">Chargement des annonces...</p>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="!isLoading && filteredAnnouncements.length === 0" class="text-center py-20">
+      <i class="fa-solid fa-inbox text-6xl text-gray-300 mb-4"></i>
+      <h3 class="text-2xl font-semibold text-gray-700 mb-2">Aucune annonce trouvée</h3>
+      <p class="text-gray-500">Essayez de modifier vos critères de recherche</p>
+    </div>
+
+    <!-- Announcements Grid -->
+    <div *ngIf="!isLoading && filteredAnnouncements.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let announcement of filteredAnnouncements"
+        class="bg-white rounded-2xl shadow-hard overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+        data-aos="fade-up"
+        (click)="openAnnouncementDetail(announcement)"
+      >
+        <!-- Image -->
+        <div *ngIf="announcement.imageUrl" class="h-48 overflow-hidden bg-gray-200">
+          <img [src]="announcement.imageUrl" [alt]="announcement.title" class="w-full h-full object-cover">
+        </div>
+        <div *ngIf="!announcement.imageUrl" class="h-48 bg-gradient-to-br from-primary-light to-primary flex items-center justify-center">
+          <i class="fa-solid fa-image text-6xl text-white/30"></i>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+          <!-- Category Badge -->
+          <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+              <i class="fa-solid" [ngClass]="getCategoryIcon(announcement.category)"></i>
+              {{ getCategoryLabel(announcement.category) }}
+            </span>
+            <span *ngIf="announcement.price" class="text-xl font-bold text-primary">
+              {{ formatPrice(announcement.price) }}
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+            {{ announcement.title }}
+          </h3>
+
+          <!-- Description -->
+          <p class="text-gray-600 mb-4 line-clamp-3">
+            {{ announcement.description }}
+          </p>
+
+          <!-- Author -->
+          <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+            <i class="fa-solid fa-user"></i>
+            <span *ngIf="announcement.firstName && announcement.lastName">
+              {{ announcement.firstName }} {{ announcement.lastName }}
+            </span>
+            <span *ngIf="!announcement.firstName || !announcement.lastName">
+              Utilisateur
+            </span>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="pt-4 border-t border-gray-200">
+            <div class="flex items-center gap-2 text-sm" [ngClass]="isLoggedIn ? 'text-gray-600' : 'text-gray-400'">
+              <i class="fa-solid fa-phone"></i>
+              <span>{{ getContactInfo(announcement) }}</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mt-2">
+              <i class="fa-solid fa-calendar"></i>
+              <span>Publié le {{ formatDate(announcement.createdAt) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Announcement Detail Modal -->
+<div *ngIf="showDetailModal && selectedAnnouncement" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" (click)="closeDetailModal()">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+      <h2 class="text-2xl font-bold text-gray-800">{{ selectedAnnouncement.title }}</h2>
+      <button (click)="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <i class="fa-solid fa-times text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <!-- Image -->
+      <div *ngIf="selectedAnnouncement.imageUrl" class="mb-6 rounded-xl overflow-hidden">
+        <img [src]="selectedAnnouncement.imageUrl" [alt]="selectedAnnouncement.title" class="w-full h-auto max-h-96 object-cover">
+      </div>
+
+      <!-- Category and Price -->
+      <div class="flex items-center justify-between mb-4">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary">
+          <i class="fa-solid" [ngClass]="getCategoryIcon(selectedAnnouncement.category)"></i>
+          {{ getCategoryLabel(selectedAnnouncement.category) }}
+        </span>
+        <span *ngIf="selectedAnnouncement.price" class="text-3xl font-bold text-primary">
+          {{ formatPrice(selectedAnnouncement.price) }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Description</h3>
+        <p class="text-gray-600 whitespace-pre-line">{{ selectedAnnouncement.description }}</p>
+      </div>
+
+      <!-- Author Info -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-xl">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">Publié par</h3>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <i class="fa-solid fa-user text-primary text-xl"></i>
+          </div>
+          <div>
+            <p class="font-medium text-gray-800">
+              <span *ngIf="selectedAnnouncement.firstName && selectedAnnouncement.lastName">
+                {{ selectedAnnouncement.firstName }} {{ selectedAnnouncement.lastName }}
+              </span>
+              <span *ngIf="!selectedAnnouncement.firstName || !selectedAnnouncement.lastName">
+                Utilisateur
+              </span>
+            </p>
+            <p class="text-sm text-gray-500">
+              <i class="fa-solid fa-calendar me-1"></i>
+              Publié le {{ formatDate(selectedAnnouncement.createdAt) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="mb-6 p-4 border-2 rounded-xl" [ngClass]="isLoggedIn ? 'border-primary/20 bg-primary/5' : 'border-yellow-300 bg-yellow-50'">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+          <i class="fa-solid fa-address-card me-2"></i>Informations de contact
+        </h3>
+        
+        <div *ngIf="!isLoggedIn" class="text-center py-4">
+          <i class="fa-solid fa-lock text-3xl text-yellow-600 mb-3"></i>
+          <p class="text-yellow-800 font-medium mb-2">Connectez-vous pour voir les coordonnées</p>
+          <p class="text-sm text-yellow-700">Les informations de contact sont réservées aux membres connectés</p>
+        </div>
+
+        <div *ngIf="isLoggedIn">
+          <div *ngIf="selectedAnnouncement.contactPhone" class="mb-3 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <i class="fa-solid fa-phone text-primary"></i>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Téléphone</p>
+              <a [href]="'tel:' + selectedAnnouncement.contactPhone" class="text-primary font-medium hover:underline">
+                {{ selectedAnnouncement.contactPhone }}
+              </a>
+            </div>
+          </div>
+
+          <div *ngIf="selectedAnnouncement.contactEmail" class="mb-3 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <i class="fa-solid fa-envelope text-primary"></i>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Email</p>
+              <a [href]="'mailto:' + selectedAnnouncement.contactEmail" class="text-primary font-medium hover:underline">
+                {{ selectedAnnouncement.contactEmail }}
+              </a>
+            </div>
+          </div>
+
+          <div *ngIf="!selectedAnnouncement.contactPhone && !selectedAnnouncement.contactEmail" class="text-gray-500 text-center py-2">
+            <i class="fa-solid fa-info-circle me-2"></i>
+            Contact via le site
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-6 flex justify-end gap-3">
+      <button (click)="closeDetailModal()" class="px-6 py-2 rounded-xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+        Fermer
+      </button>
+    </div>
+  </div>
+</div>

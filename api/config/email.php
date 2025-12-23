@@ -54,6 +54,33 @@ class EmailSender {
     }
     
     /**
+     * Envoyer un email de réponse à l'expéditeur du message
+     */
+    public function sendReplyNotification($contactData, $reply) {
+        $to = $contactData['email'];
+        $name = $contactData['name'] ?? 'Utilisateur';
+        $subject = "Réponse à votre message - " . $contactData['subject'];
+        
+        $message = $this->buildReplyEmail($name, $contactData, $reply);
+        $headers = $this->buildHeaders($this->config['from_email'], $this->config['from_name']);
+        
+        error_log("DEBUG sendReplyNotification - To: " . $to . " - Subject: " . $subject . " - Name: " . $name);
+        error_log("DEBUG sendReplyNotification - From: " . $this->config['from_email'] . " - FromName: " . $this->config['from_name']);
+        
+        // Utiliser exactement la même méthode que sendContactConfirmation
+        $result = mail($to, $subject, $message, $headers);
+        
+        if (!$result) {
+            $lastError = error_get_last();
+            error_log("DEBUG sendReplyNotification - Erreur mail(): " . ($lastError ? $lastError['message'] : 'Unknown error'));
+        } else {
+            error_log("DEBUG sendReplyNotification - Email envoyé avec succès");
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Construire le contenu de l'email de notification admin
      */
     private function buildContactEmail($data) {
@@ -90,6 +117,29 @@ class EmailSender {
         $message .= "Association ALRCF\n";
         $message .= "Email: contact@alrcf.fr\n";
         $message .= "Site web: https://alrcf.fr\n\n";
+        $message .= "Cordialement,\n";
+        $message .= "L'équipe ALRCF";
+        
+        return $message;
+    }
+    
+    /**
+     * Construire le contenu de l'email de réponse
+     */
+    private function buildReplyEmail($name, $contactData, $reply) {
+        $message = "Bonjour " . $name . ",\n\n";
+        $message .= "Nous avons bien reçu votre message concernant : " . $contactData['subject'] . "\n\n";
+        $message .= "Voici notre réponse :\n\n";
+        $message .= "=== RÉPONSE ===\n";
+        $message .= $reply . "\n\n";
+        $message .= "=== VOTRE MESSAGE ORIGINAL ===\n";
+        $message .= "Sujet: " . $contactData['subject'] . "\n";
+        $message .= "Message:\n" . $contactData['message'] . "\n\n";
+        $message .= "=== NOS COORDONNÉES ===\n";
+        $message .= "Association ALRCF\n";
+        $message .= "Email: contact@alrcf.fr\n";
+        $message .= "Site web: https://alrcf.fr\n\n";
+        $message .= "Si vous avez d'autres questions, n'hésitez pas à nous contacter.\n\n";
         $message .= "Cordialement,\n";
         $message .= "L'équipe ALRCF";
         

@@ -26,7 +26,7 @@ $newsId = $input['id'];
 unset($input['id']); // Retirer l'ID des données à mettre à jour
 
 try {
-    $database = new Database();
+    $database = createDatabase();
     $db = $database->getConnection();
     
     if ($db === null) {
@@ -37,8 +37,11 @@ try {
     $fields = [];
     $values = [];
     
+    // Mapping des noms de colonnes camelCase
+    $allowedFields = ['title', 'content', 'category', 'isPublished', 'imageUrl', 'videoUrl'];
+    
     foreach ($input as $key => $value) {
-        if (in_array($key, ['title', 'content', 'category', 'is_published', 'image_url'])) {
+        if (in_array($key, $allowedFields)) {
             $fields[] = "`$key` = :$key";
             $values[$key] = $value;
         }
@@ -51,13 +54,16 @@ try {
     }
     
     $values['id'] = $newsId;
-    $values['updated_at'] = date('Y-m-d H:i:s');
     
-    $query = "UPDATE news SET " . implode(', ', $fields) . ", updated_at = :updated_at WHERE id = :id";
+    $query = "UPDATE news SET " . implode(', ', $fields) . ", updatedAt = NOW() WHERE id = :id";
     $stmt = $db->prepare($query);
     
     foreach ($values as $key => $value) {
-        $stmt->bindValue(":$key", $value);
+        if ($key === 'isPublished') {
+            $stmt->bindValue(":$key", $value, PDO::PARAM_BOOL);
+        } else {
+            $stmt->bindValue(":$key", $value);
+        }
     }
     
     if ($stmt->execute()) {

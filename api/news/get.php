@@ -4,8 +4,8 @@
  * GET /api/news/get.php?id=123 (optionnel)
  */
 
-require_once '../config/database.php';
-require_once '../config/cors.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/cors.php';
 
 header('Content-Type: application/json');
 
@@ -17,17 +17,34 @@ try {
     if (!$pdo) {
         throw new Exception('Erreur de connexion à la base de données');
     }
+
+    // Vérifier si l'utilisateur est authentifié (optionnel pour les actualités publiques)
+    $isAdmin = false;
+    $user = null;
+    
+    // Essayer de vérifier le token si présent (pour les admins)
+    if (isset($_SERVER['HTTP_AUTHORIZATION']) || isset($_GET['token'])) {
+        require_once __DIR__ . '/../auth/middleware.php';
+        try {
+            $user = verifyToken($pdo);
+            $isAdmin = ($user && $user['role'] === 'admin');
+        } catch (Exception $e) {
+            // Token invalide ou absent, continuer en mode public
+            $isAdmin = false;
+        }
+    }
     
     // Vérifier si un ID spécifique est demandé
     if (isset($_GET['id']) && !empty($_GET['id'])) {
         $id = (int)$_GET['id'];
         
-        $stmt = $pdo->prepare("
-            SELECT n.*, u.firstName, u.lastName 
-            FROM news n 
-            LEFT JOIN users u ON n.authorId = u.id 
-            WHERE n.id = ? AND n.isPublished = 1
-        ");
+        $sql = "SELECT n.* FROM news n WHERE n.id = ?";
+        
+        if (!$isAdmin) {
+            $sql .= " AND n.isPublished = 1";
+        }
+
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
         $news = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -44,14 +61,16 @@ try {
             'data' => $news
         ]);
     } else {
-        // Récupérer toutes les actualités publiées
-        $stmt = $pdo->prepare("
-            SELECT n.*, u.firstName, u.lastName 
-            FROM news n 
-            LEFT JOIN users u ON n.authorId = u.id 
-            WHERE n.isPublished = 1 
-            ORDER BY n.createdAt DESC
-        ");
+        // Récupérer les actualités
+        $sql = "SELECT n.* FROM news n";
+        
+        if (!$isAdmin) {
+            $sql .= " WHERE n.isPublished = 1";
+        }
+        
+        $sql .= " ORDER BY n.createdAt DESC";
+
+        $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $news = $stmt->fetchAll(PDO::FETCH_ASSOC);
         

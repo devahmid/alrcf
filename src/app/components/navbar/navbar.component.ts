@@ -11,17 +11,13 @@ import { User } from '../../models/user.model';
 export class NavbarComponent implements OnInit {
   isMenuOpen = false;
   showUserMenu = false;
-  currentUser: User | null = null;
-
   constructor(
     public router: Router,
-    private authService: AuthService
-  ) {}
+    public authService: AuthService
+  ) { }
 
   ngOnInit() {
-    this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
-    });
+    // No subscription needed with Signals
   }
 
   toggleMenu() {

@@ -36,6 +36,7 @@ CREATE TABLE news (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     imageUrl VARCHAR(500),
+    videoUrl VARCHAR(500),
     author VARCHAR(100) NOT NULL,
     publishedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     isPublished BOOLEAN DEFAULT TRUE,
@@ -119,6 +120,29 @@ CREATE TABLE event_registrations (
     UNIQUE KEY unique_registration (eventId, adherentId)
 );
 
+-- Table des annonces entre voisins
+CREATE TABLE announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category ENUM('service', 'emploi', 'vente', 'location', 'autre') NOT NULL,
+    price DECIMAL(10,2),
+    contactPhone VARCHAR(20),
+    contactEmail VARCHAR(255),
+    imageUrl VARCHAR(500),
+    status ENUM('pending', 'approved', 'rejected', 'expired') DEFAULT 'pending',
+    isPublic BOOLEAN DEFAULT TRUE,
+    approvedBy INT,
+    approvedAt DATETIME,
+    rejectionReason TEXT,
+    expiresAt DATETIME,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (approvedBy) REFERENCES users(id) ON DELETE SET NULL
+);
+
 -- Insertion d'un utilisateur admin par défaut
 INSERT INTO users (
     email, 
@@ -167,3 +191,7 @@ CREATE INDEX idx_reports_adherent ON reports(adherentId);
 CREATE INDEX idx_reports_status ON reports(status);
 CREATE INDEX idx_subscriptions_adherent ON subscriptions(adherentId);
 CREATE INDEX idx_subscriptions_period ON subscriptions(period);
+CREATE INDEX idx_announcements_user ON announcements(userId);
+CREATE INDEX idx_announcements_status ON announcements(status);
+CREATE INDEX idx_announcements_category ON announcements(category);
+CREATE INDEX idx_announcements_public ON announcements(isPublic, status);

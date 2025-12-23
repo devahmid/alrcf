@@ -1,0 +1,183 @@
+<!-- Header Section -->
+<section class="news-header">
+  <div class="container mx-auto px-5 py-20">
+    <div class="text-center" data-aos="fade-up">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Actualités</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Restez informé des dernières nouvelles et événements de l'association
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="container mx-auto px-5 py-20">
+  <div class="text-center">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+    <p class="mt-4 text-gray-600">Chargement des actualités...</p>
+  </div>
+</div>
+
+<!-- News Content -->
+<div *ngIf="!isLoading" class="container mx-auto px-5 py-12">
+  <!-- Category Filter -->
+  <div class="mb-8 flex flex-wrap gap-3 justify-center" data-aos="fade-up">
+    <button
+      *ngFor="let category of categories"
+      (click)="filterByCategory(category.value)"
+      [class]="selectedCategory === category.value 
+        ? 'px-6 py-2 bg-brand-blue text-white rounded-full font-medium transition-all shadow-md' 
+        : 'px-6 py-2 bg-white text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all border border-gray-200'">
+      {{ category.label }}
+    </button>
+  </div>
+
+  <!-- News Grid -->
+  <div *ngIf="filteredNews.length > 0" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <article
+      *ngFor="let article of filteredNews; let i = index"
+      class="group bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 h-full flex flex-col"
+      [attr.data-aos]="'fade-up'" [attr.data-aos-delay]="i * 100">
+
+      <!-- Image -->
+      <div class="relative h-64 overflow-hidden bg-gray-100">
+        <img
+          *ngIf="article.imageUrl"
+          [src]="article.imageUrl"
+          [alt]="article.title"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+        <div *ngIf="!article.imageUrl" class="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-blue/10 to-purple-500/10">
+          <i class="fas fa-newspaper text-6xl text-gray-300"></i>
+        </div>
+        <div class="absolute top-4 left-4">
+          <span class="px-3 py-1 bg-white/90 backdrop-blur-md rounded-lg text-sm font-bold text-gray-900 shadow-sm">
+            {{ formatDate(article.publishedAt) }}
+          </span>
+        </div>
+        <div class="absolute top-4 right-4">
+          <span class="px-3 py-1 bg-brand-blue/90 backdrop-blur-md rounded-lg text-xs font-semibold text-white shadow-sm uppercase">
+            {{ getCategoryLabel(article.category) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6 flex-1 flex flex-col">
+        <div class="flex items-center gap-2 mb-3 text-sm text-gray-500">
+          <i class="fas fa-user text-brand-blue"></i>
+          <span>{{ article.author }}</span>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-blue transition-colors line-clamp-2">
+          {{ article.title }}
+        </h3>
+        <p class="text-gray-600 mb-6 flex-1 line-clamp-3">
+          {{ article.content }}
+        </p>
+
+        <!-- Video Link -->
+        <div *ngIf="article.videoUrl" class="mb-4">
+          <a
+            [href]="article.videoUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 text-brand-blue hover:text-blue-700 font-medium text-sm">
+            <i class="fas fa-video"></i>
+            <span>Voir la vidéo</span>
+            <i class="fas fa-external-link-alt text-xs"></i>
+          </a>
+        </div>
+
+        <button
+          (click)="openNewsDetail(article)"
+          class="flex items-center justify-between w-full p-3 rounded-xl bg-gray-50 group-hover:bg-brand-blue group-hover:text-white transition-colors cursor-pointer">
+          <span class="font-medium text-sm">Lire la suite</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredNews.length === 0" class="text-center py-24 bg-gray-50 rounded-3xl border border-gray-100">
+    <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400 text-3xl">
+      <i class="fas fa-newspaper"></i>
+    </div>
+    <h3 class="text-xl font-bold text-gray-900 mb-2">
+      {{ selectedCategory === 'all' ? 'Aucune actualité pour le moment' : 'Aucune actualité dans cette catégorie' }}
+    </h3>
+    <p class="text-gray-600">Revenez bientôt pour découvrir nos dernières actualités.</p>
+  </div>
+</div>
+
+<!-- News Detail Modal -->
+<div *ngIf="showDetailModal && selectedNews" 
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" 
+     (click)="closeDetailModal()">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" 
+       (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between z-10">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-full text-xs font-semibold uppercase">
+            {{ getCategoryLabel(selectedNews.category) }}
+          </span>
+          <span class="text-sm text-gray-500">{{ formatDate(selectedNews.publishedAt) }}</span>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-800">{{ selectedNews.title }}</h2>
+      </div>
+      <button (click)="closeDetailModal()" class="text-gray-400 hover:text-gray-600 transition-colors ml-4">
+        <i class="fa-solid fa-times text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6">
+      <!-- Image -->
+      <div *ngIf="selectedNews.imageUrl" class="mb-6 rounded-xl overflow-hidden">
+        <img [src]="selectedNews.imageUrl" [alt]="selectedNews.title" class="w-full h-auto max-h-96 object-cover">
+      </div>
+
+      <!-- Author Info -->
+      <div class="mb-6 p-4 bg-gray-50 rounded-xl">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <i class="fas fa-user text-brand-blue"></i>
+          <span><strong>Publié par:</strong> {{ selectedNews.author }}</span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="mb-6">
+        <div class="prose max-w-none">
+          <p class="text-gray-700 whitespace-pre-line leading-relaxed text-lg">{{ selectedNews.content }}</p>
+        </div>
+      </div>
+
+      <!-- Video Link -->
+      <div *ngIf="selectedNews.videoUrl" class="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+        <a
+          [href]="selectedNews.videoUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 text-brand-blue hover:text-blue-700 font-semibold text-lg">
+          <i class="fas fa-video text-2xl"></i>
+          <span>Voir la vidéo associée</span>
+          <i class="fas fa-external-link-alt text-sm"></i>
+        </a>
+      </div>
+
+      <!-- Footer -->
+      <div class="pt-6 border-t border-gray-200 flex items-center justify-between">
+        <div class="text-sm text-gray-500">
+          <i class="fas fa-calendar me-2"></i>
+          Publié le {{ formatDate(selectedNews.publishedAt) }}
+        </div>
+        <button
+          (click)="closeDetailModal()"
+          class="px-6 py-2 bg-brand-blue text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

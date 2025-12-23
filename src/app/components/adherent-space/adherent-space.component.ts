@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AssociationService } from '../../services/association.service';
+import { ModalService } from '../../services/modal.service';
 import { Adherent } from '../../models/user.model';
-import { Subscription, Report, ContactMessage } from '../../models/association.model';
+import { Subscription, Report, ContactMessage, Announcement } from '../../models/association.model';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-adherent-space',
@@ -14,21 +16,28 @@ export class AdherentSpaceComponent implements OnInit {
   currentUser: Adherent | null = null;
   activeTab = 'profile';
   isLoading = false;
-  
+
   // Profile form
   profileForm: FormGroup;
-  
+
   // Report form
   reportForm: FormGroup;
-  
+
   // Message form
   messageForm: FormGroup;
-  
+
+  // Announcement form
+  announcementForm: FormGroup;
+  editingAnnouncement: Announcement | null = null;
+  announcementImageUrl: string | null = null;
+  announcementImageFile: File | null = null;
+
   // Data arrays
   subscriptions: Subscription[] = [];
   reports: Report[] = [];
   messages: ContactMessage[] = [];
-  
+  announcements: Announcement[] = [];
+
   // Statistics
   stats = {
     totalSubscriptions: 0,
@@ -40,7 +49,8 @@ export class AdherentSpaceComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private associationService: AssociationService
+    private associationService: AssociationService,
+    private modalService: ModalService
   ) {
     this.profileForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -65,6 +75,15 @@ export class AdherentSpaceComponent implements OnInit {
       subject: ['', [Validators.required, Validators.minLength(5)]],
       message: ['', [Validators.required, Validators.minLength(20)]]
     });
+
+    this.announcementForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(20)]],
+      category: ['', Validators.required],
+      price: [''],
+      contactPhone: [''],
+      contactEmail: ['']
+    });
   }
 
   ngOnInit() {
@@ -75,7 +94,7 @@ export class AdherentSpaceComponent implements OnInit {
 
   loadUserData() {
     const user = this.authService.getCurrentUser();
-    if (user && user.role === 'adherent') {
+    if (user && (user.role === 'adherent' || user.role === 'admin')) {
       this.currentUser = user as Adherent;
       this.populateProfileForm();
     }
@@ -99,7 +118,7 @@ export class AdherentSpaceComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    
+
     // Load subscriptions
     this.associationService.getSubscriptions(this.currentUser?.id).subscribe({
       next: (response) => {
@@ -127,13 +146,29 @@ export class AdherentSpaceComponent implements OnInit {
       next: (response) => {
         this.messages = response.success ? response.data : [];
         this.updateStats();
-        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading messages:', error);
-        this.isLoading = false;
       }
     });
+
+    // Load announcements
+    if (this.currentUser?.id) {
+      this.associationService.getAnnouncements({ userId: this.currentUser.id }).subscribe({
+        next: (response) => {
+          this.announcements = response.success ? response.data : [];
+          this.updateStats();
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading announcements:', error);
+          this.announcements = [];
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.isLoading = false;
+    }
   }
 
   updateStats() {
@@ -161,7 +196,7 @@ export class AdherentSpaceComponent implements OnInit {
   onProfileSubmit() {
     if (this.profileForm.valid && this.currentUser) {
       this.isLoading = true;
-      
+
       this.authService.updateProfile(this.profileForm.value).subscribe({
         next: (response) => {
           this.isLoading = false;
@@ -169,16 +204,16 @@ export class AdherentSpaceComponent implements OnInit {
             // Update current user data
             if (this.currentUser) {
               Object.assign(this.currentUser, this.profileForm.value);
-              this.authService.currentUserSubject$.next(this.currentUser);
+              this.authService.setCurrentUser(this.currentUser);
             }
-            alert('Profil mis à jour avec succès !');
+            this.modalService.success('Profil mis à jour avec succès !').pipe(take(1)).subscribe();
           } else {
-            alert('Erreur lors de la mise à jour du profil');
+            this.modalService.error('Erreur lors de la mise à jour du profil').pipe(take(1)).subscribe();
           }
         },
         error: (error) => {
           this.isLoading = false;
-          alert('Erreur lors de la mise à jour du profil');
+          this.modalService.error('Erreur lors de la mise à jour du profil').pipe(take(1)).subscribe();
           console.error('Profile update error:', error);
         }
       });
@@ -190,26 +225,26 @@ export class AdherentSpaceComponent implements OnInit {
   onReportSubmit() {
     if (this.reportForm.valid && this.currentUser) {
       this.isLoading = true;
-      
+
       const reportData = {
         ...this.reportForm.value,
         adherentId: this.currentUser.id
       };
-      
+
       this.associationService.createReport(reportData).subscribe({
         next: (response) => {
           this.isLoading = false;
           if (response.success) {
             this.reportForm.reset();
             this.loadData(); // Reload data
-            alert('Signalement envoyé avec succès !');
+            this.modalService.success('Signalement envoyé avec succès !').pipe(take(1)).subscribe();
           } else {
-            alert('Erreur lors de l\'envoi du signalement');
+            this.modalService.error('Erreur lors de l\'envoi du signalement').pipe(take(1)).subscribe();
           }
         },
         error: (error) => {
           this.isLoading = false;
-          alert('Erreur lors de l\'envoi du signalement');
+          this.modalService.error('Erreur lors de l\'envoi du signalement').pipe(take(1)).subscribe();
           console.error('Report creation error:', error);
         }
       });
@@ -221,28 +256,28 @@ export class AdherentSpaceComponent implements OnInit {
   onMessageSubmit() {
     if (this.messageForm.valid && this.currentUser) {
       this.isLoading = true;
-      
+
       const messageData = {
         ...this.messageForm.value,
         name: `${this.currentUser.firstName} ${this.currentUser.lastName}`,
         email: this.currentUser.email,
         phone: this.currentUser.phone
       };
-      
+
       this.associationService.sendMessage(messageData).subscribe({
         next: (response) => {
           this.isLoading = false;
           if (response.success) {
             this.messageForm.reset();
             this.loadData(); // Reload data
-            alert('Message envoyé avec succès !');
+            this.modalService.success('Message envoyé avec succès !').pipe(take(1)).subscribe();
           } else {
-            alert('Erreur lors de l\'envoi du message');
+            this.modalService.error('Erreur lors de l\'envoi du message').pipe(take(1)).subscribe();
           }
         },
         error: (error) => {
           this.isLoading = false;
-          alert('Erreur lors de l\'envoi du message');
+          this.modalService.error('Erreur lors de l\'envoi du message').pipe(take(1)).subscribe();
           console.error('Message sending error:', error);
         }
       });
@@ -324,5 +359,207 @@ export class AdherentSpaceComponent implements OnInit {
       month: 'short',
       day: 'numeric'
     });
+  }
+
+  // Announcement methods
+  onAnnouncementImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      // Vérifier la taille (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        this.modalService.error('Le fichier est trop volumineux (max 5MB)').pipe(take(1)).subscribe();
+        return;
+      }
+
+      // Vérifier le type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.modalService.error('Type de fichier non autorisé. Formats acceptés: JPG, PNG, GIF, WEBP').pipe(take(1)).subscribe();
+        return;
+      }
+
+      this.announcementImageFile = file;
+      
+      // Afficher un aperçu
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.announcementImageUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeAnnouncementImage() {
+    this.announcementImageUrl = null;
+    this.announcementImageFile = null;
+    const fileInput = document.getElementById('announcementImage') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
+  onAnnouncementSubmit() {
+    if (this.announcementForm.valid && this.currentUser) {
+      this.isLoading = true;
+
+      // Si une nouvelle image est sélectionnée, l'uploader d'abord
+      if (this.announcementImageFile) {
+        this.associationService.uploadAnnouncementImage(this.announcementImageFile).subscribe({
+          next: (uploadResponse) => {
+            if (uploadResponse.success) {
+              // Créer/mettre à jour l'annonce avec l'URL de l'image
+              this.submitAnnouncement(uploadResponse.url);
+            } else {
+              this.isLoading = false;
+              this.modalService.error('Erreur lors de l\'upload de l\'image').pipe(take(1)).subscribe();
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.modalService.error('Erreur lors de l\'upload de l\'image').pipe(take(1)).subscribe();
+            console.error('Image upload error:', error);
+          }
+        });
+      } else {
+        // Pas d'image à uploader, soumettre directement
+        this.submitAnnouncement(this.editingAnnouncement?.imageUrl || null);
+      }
+    } else {
+      this.markFormGroupTouched(this.announcementForm);
+    }
+  }
+
+  private submitAnnouncement(imageUrl: string | null) {
+    const announcementData = {
+      ...this.announcementForm.value,
+      price: this.announcementForm.value.price ? parseFloat(this.announcementForm.value.price) : null,
+      imageUrl: imageUrl
+    };
+
+    if (this.editingAnnouncement) {
+      // Update existing announcement
+      this.associationService.updateAnnouncement(this.editingAnnouncement.id, announcementData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            this.announcementForm.reset();
+            this.editingAnnouncement = null;
+            this.announcementImageUrl = null;
+            this.announcementImageFile = null;
+            this.loadData();
+            this.modalService.success('Annonce mise à jour avec succès ! Elle sera à nouveau validée par l\'administrateur.').pipe(take(1)).subscribe();
+          } else {
+            this.modalService.error('Erreur lors de la mise à jour de l\'annonce').pipe(take(1)).subscribe();
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.modalService.error('Erreur lors de la mise à jour de l\'annonce').pipe(take(1)).subscribe();
+          console.error('Announcement update error:', error);
+        }
+      });
+    } else {
+      // Create new announcement
+      this.associationService.createAnnouncement(announcementData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            this.announcementForm.reset();
+            this.announcementImageUrl = null;
+            this.announcementImageFile = null;
+            this.loadData();
+            this.modalService.success('Annonce créée avec succès ! Elle sera validée par l\'administrateur avant publication.').pipe(take(1)).subscribe();
+          } else {
+            this.modalService.error('Erreur lors de la création de l\'annonce').pipe(take(1)).subscribe();
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.modalService.error('Erreur lors de la création de l\'annonce').pipe(take(1)).subscribe();
+          console.error('Announcement creation error:', error);
+        }
+      });
+    }
+  }
+
+  editAnnouncement(announcement: Announcement) {
+    this.editingAnnouncement = announcement;
+    this.announcementForm.patchValue({
+      title: announcement.title,
+      description: announcement.description,
+      category: announcement.category,
+      price: announcement.price || '',
+      contactPhone: announcement.contactPhone || '',
+      contactEmail: announcement.contactEmail || ''
+    });
+    this.announcementImageUrl = announcement.imageUrl || null;
+    this.announcementImageFile = null;
+    // Scroll to form
+    setTimeout(() => {
+      const formElement = document.querySelector('.announcement-form-container');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+
+  cancelEdit() {
+    this.editingAnnouncement = null;
+    this.announcementForm.reset();
+    this.announcementImageUrl = null;
+    this.announcementImageFile = null;
+  }
+
+  deleteAnnouncement(id: number) {
+    this.modalService.confirmAction('Êtes-vous sûr de vouloir supprimer cette annonce ?', 'Confirmation de suppression').pipe(take(1)).subscribe((confirmed) => {
+      if (confirmed) {
+        this.isLoading = true;
+        this.associationService.deleteAnnouncement(id).subscribe({
+          next: (response) => {
+            this.isLoading = false;
+            if (response.success) {
+              this.loadData();
+              this.modalService.success('Annonce supprimée avec succès !').pipe(take(1)).subscribe();
+            } else {
+              this.modalService.error('Erreur lors de la suppression de l\'annonce').pipe(take(1)).subscribe();
+            }
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.modalService.error('Erreur lors de la suppression de l\'annonce').pipe(take(1)).subscribe();
+            console.error('Announcement deletion error:', error);
+          }
+        });
+      }
+    });
+  }
+
+  getCategoryLabel(category: string): string {
+    const labels: { [key: string]: string } = {
+      'service': 'Service',
+      'emploi': 'Emploi',
+      'vente': 'Vente',
+      'location': 'Location',
+      'autre': 'Autre'
+    };
+    return labels[category] || category;
+  }
+
+  getStatusLabel(status: string): string {
+    const labels: { [key: string]: string } = {
+      'pending': 'En attente',
+      'approved': 'Approuvée',
+      'rejected': 'Rejetée',
+      'expired': 'Expirée'
+    };
+    return labels[status] || status;
+  }
+
+  formatPrice(price?: number): string {
+    if (!price) return 'Prix à convenir';
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(price);
   }
 }

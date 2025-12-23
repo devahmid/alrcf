@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       this.redirectToUserSpace();
     }
-    
+
     this.initializeAnimations();
   }
 
@@ -51,9 +51,9 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
       this.errorMessage = '';
-      
+
       const { email, password, rememberMe } = this.loginForm.value;
-      
+
       this.authService.login(email, password).subscribe({
         next: (response) => {
           this.isSubmitting = false;
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
               localStorage.removeItem('rememberMe');
               localStorage.removeItem('rememberedEmail');
             }
-            
+
             this.redirectToUserSpace();
           } else {
             this.errorMessage = response.message || 'Erreur de connexion';
@@ -128,7 +128,7 @@ export class LoginComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  goToHome() {
-    this.router.navigate(['/']);
+  goToRegister(): void {
+    this.router.navigate(['/inscription']);
   }
 }

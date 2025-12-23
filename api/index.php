@@ -6,6 +6,13 @@
 
 require_once 'config/cors.php';
 
+// Gérer les requêtes OPTIONS (preflight CORS) AVANT le routing
+// Les headers CORS sont déjà définis dans cors.php
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit(0);
+}
+
 // Récupérer l'URL demandée
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
@@ -43,6 +50,9 @@ if (empty($segments[0])) {
                 switch ($action) {
                     case 'login':
                         include 'auth/login.php';
+                        break;
+                    case 'register':
+                        include 'auth/register.php';
                         break;
                     case 'profile':
                         include 'auth/profile.php';
@@ -123,6 +133,9 @@ if (empty($segments[0])) {
                     case 'update':
                         include 'contact/update.php';
                         break;
+                    case 'delete':
+                        include 'contact/delete.php';
+                        break;
                     default:
                         http_response_code(404);
                         echo json_encode(['error' => 'Action non trouvée']);
@@ -182,6 +195,79 @@ if (empty($segments[0])) {
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'Action non trouvée']);
+            }
+            break;
+
+        case 'admin':
+            if (isset($segments[1])) {
+                $action = $segments[1];
+                switch ($action) {
+                    case 'users':
+                        include 'admin/users.php';
+                        break;
+                    default:
+                        http_response_code(404);
+                        echo json_encode(['error' => 'Action non trouvée']);
+                }
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' => 'Action requise pour l\'endpoint admin']);
+            }
+            break;
+            
+        case 'announcements':
+            if (isset($segments[1])) {
+                $action = $segments[1];
+                switch ($action) {
+                    case 'get':
+                        include 'announcements/get.php';
+                        break;
+                    case 'create':
+                        include 'announcements/create.php';
+                        break;
+                    case 'update':
+                        include 'announcements/update.php';
+                        break;
+                    case 'delete':
+                        include 'announcements/delete.php';
+                        break;
+                    case 'validate':
+                        include 'announcements/validate.php';
+                        break;
+                    case 'upload':
+                        include 'announcements/upload.php';
+                        break;
+                    default:
+                        http_response_code(404);
+                        echo json_encode(['error' => 'Action non trouvée']);
+                }
+            } else {
+                include 'announcements/get.php';
+            }
+            break;
+            
+        case 'projects':
+            if (isset($segments[1])) {
+                $action = $segments[1];
+                switch ($action) {
+                    case 'get':
+                        include 'projects/get.php';
+                        break;
+                    case 'create':
+                        include 'projects/create.php';
+                        break;
+                    case 'update':
+                        include 'projects/update.php';
+                        break;
+                    case 'delete':
+                        include 'projects/delete.php';
+                        break;
+                    default:
+                        http_response_code(404);
+                        echo json_encode(['error' => 'Action non trouvée']);
+                }
+            } else {
+                include 'projects/get.php';
             }
             break;
             

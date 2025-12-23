@@ -1,69 +1,173 @@
 <!-- Header -->
-<header id="header" class="bg-white border-b border-light-grey sticky top-0 z-50">
+<header id="header"
+  class="bg-white/90 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-5">
-    <div class="flex items-center justify-between h-16">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 bg-royal-blue rounded-lg flex items-center justify-center">
-          <i class="fa-solid fa-building text-white text-lg"></i>
-        </div>
-        <div>
-          <h1 class="text-xl font-bold text-gray-900">ALRCF</h1>
-          <p class="text-xs text-gray-600">Association</p>
-        </div>
+    <div class="flex items-center justify-between h-20">
+      <!-- Logo -->
+      <div class="flex items-center space-x-4 cursor-pointer group" (click)="navigateTo('/')">
+        <img src="assets/icons/logo.svg" alt="ALRCF Logo"
+          class="h-12 w-auto group-hover:scale-105 transition-transform duration-300">
+
       </div>
-      
-      <nav class="hidden md:flex items-center space-x-8">
-        <a class="nav-link" (click)="navigateTo('/')" [class.active]="router.url === '/'">
-          <span [class]="router.url === '/' ? 'text-royal-blue font-medium border-b-2 border-royal-blue pb-1' : 'text-gray-700 hover:text-royal-blue transition-colors'">Accueil</span>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-1">
+        <a (click)="navigateTo('/')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          Accueil
         </a>
-        <a class="nav-link" (click)="navigateTo('/a-propos')" [class.active]="router.url === '/a-propos'">
-          <span [class]="router.url === '/a-propos' ? 'text-royal-blue font-medium border-b-2 border-royal-blue pb-1' : 'text-gray-700 hover:text-royal-blue transition-colors'">À Propos</span>
+        <a (click)="navigateTo('/a-propos')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/a-propos' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          À Propos
         </a>
-        <a class="nav-link" (click)="navigateTo('/contact')" [class.active]="router.url === '/contact'">
-          <span [class]="router.url === '/contact' ? 'text-royal-blue font-medium border-b-2 border-royal-blue pb-1' : 'text-gray-700 hover:text-royal-blue transition-colors'">Contact</span>
+        <a (click)="navigateTo('/contact')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/contact' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          Contact
         </a>
-        <a class="nav-link" (click)="navigateTo('/espace-adherent')" *ngIf="currentUser && currentUser.role === 'adherent'">
-          <span class="text-gray-700 hover:text-royal-blue transition-colors">Tableau de Bord</span>
+        <a (click)="navigateTo('/annonces')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/annonces' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          Annonces
         </a>
-        <a class="nav-link" (click)="navigateTo('/admin')" *ngIf="currentUser && currentUser.role === 'admin'">
-          <span class="text-gray-700 hover:text-royal-blue transition-colors">Administration</span>
+        <a (click)="navigateTo('/evenements')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/evenements' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          Événements
         </a>
+        <a (click)="navigateTo('/projets')"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+          [class]="router.url === '/projets' ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+          Projets
+        </a>
+
+        <!-- Protected Links -->
+        <ng-container *ngIf="authService.currentUser()">
+          <div class="w-px h-6 bg-gray-200 mx-2"></div>
+
+          <a *ngIf="authService.currentUser()?.role === 'adherent' || authService.currentUser()?.role === 'admin'" (click)="navigateTo('/espace-adherent')"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+            [class]="router.url.includes('/espace-adherent') ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+            Tableau de Bord
+          </a>
+          <a *ngIf="authService.currentUser()?.role === 'admin'" (click)="navigateTo('/admin')"
+            class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer"
+            [class]="router.url.includes('/admin') ? 'bg-brand-blue/10 text-brand-blue' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'">
+            Administration
+          </a>
+        </ng-container>
       </nav>
-      
-      <div class="flex items-center space-x-4">
-        <button class="p-2 text-gray-600 hover:text-royal-blue" *ngIf="!currentUser" (click)="navigateTo('/connexion')">
-          <i class="fa-solid fa-sign-in-alt"></i>
+
+      <!-- Social Icons (Desktop) -->
+      <div class="hidden md:flex items-center space-x-3 mr-4">
+        <a href="https://www.tiktok.com/@nosmalheursresidence" target="_blank"
+          class="text-black hover:scale-110 transition-transform">
+          <i class="fa-brands fa-tiktok text-xl"></i>
+        </a>
+        <a href="https://www.facebook.com/groups/alrcf/" target="_blank"
+          class="text-[#1877F2] hover:scale-110 transition-transform">
+          <i class="fa-brands fa-facebook text-xl"></i>
+        </a>
+        <a href="https://www.instagram.com/association.lrcf?igsh=Mmg3dmc1eGIzNGth&utm_source=qr" target="_blank"
+          class="text-[#E4405F] hover:scale-110 transition-transform">
+          <i class="fa-brands fa-instagram text-xl"></i>
+        </a>
+      </div>
+
+      <!-- User Actions & Mobile Toggle -->
+      <div class="flex items-center space-x-3">
+        <!-- Not Logged In -->
+        <button *ngIf="!authService.currentUser()" (click)="navigateTo('/inscription')"
+          class="hidden md:flex items-center gap-2 px-5 py-2.5 text-gray-700 hover:text-gray-900 font-medium text-sm transition-all mr-2">
+          <span>S'inscrire</span>
         </button>
-        <button class="p-2 text-gray-600 hover:text-royal-blue" *ngIf="currentUser">
-          <i class="fa-solid fa-bell"></i>
+        <button *ngIf="!authService.currentUser()" (click)="navigateTo('/connexion')"
+          class="hidden md:flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-xl font-medium text-sm hover:bg-gray-800 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+          <span>Connexion</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
         </button>
-        <div class="relative" *ngIf="currentUser">
-          <img [src]="'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg'" alt="Profile" class="w-8 h-8 rounded-full cursor-pointer" (click)="toggleUserMenu()">
-          <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" [class.hidden]="!showUserMenu">
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" (click)="navigateTo('/espace-adherent')" *ngIf="currentUser.role === 'adherent'">Mon Profil</a>
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" (click)="navigateTo('/admin')" *ngIf="currentUser.role === 'admin'">Administration</a>
-            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" (click)="logout()">Déconnexion</a>
+
+        <!-- Logged In -->
+        <div class="relative hidden md:block" *ngIf="authService.currentUser()">
+          <button (click)="toggleUserMenu()"
+            class="flex items-center gap-2 p-1 pl-3 pr-1 rounded-full border border-gray-200 hover:shadow-md transition-all">
+            <span class="text-sm font-medium text-gray-700">{{ authService.currentUser()?.firstName }}</span>
+            <div
+              class="w-8 h-8 rounded-full bg-brand-blue text-white flex items-center justify-center text-sm font-bold">
+              {{ authService.currentUser()?.firstName?.charAt(0) }}
+            </div>
+          </button>
+
+          <!-- Dropdown -->
+          <div
+            class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 transform origin-top-right transition-all duration-200"
+            *ngIf="showUserMenu" (clickOutside)="showUserMenu = false">
+            <div class="px-4 py-3 border-b border-gray-100">
+              <p class="text-sm font-medium text-gray-900">{{ authService.currentUser()?.firstName }} {{
+                authService.currentUser()?.lastName }}</p>
+              <p class="text-xs text-gray-500 truncate">{{ authService.currentUser()?.email }}</p>
+            </div>
+            <a (click)="navigateTo('/espace-adherent')" *ngIf="authService.currentUser()?.role === 'adherent' || authService.currentUser()?.role === 'admin'"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+              <i class="fas fa-tachometer-alt mr-2"></i>Tableau de Bord
+            </a>
+            <a (click)="navigateTo('/admin')" *ngIf="authService.currentUser()?.role === 'admin'"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">
+              <i class="fas fa-cog mr-2"></i>Administration
+            </a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <a (click)="logout()"
+              class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer">
+              <i class="fas fa-sign-out-alt mr-2"></i>Déconnexion
+            </a>
           </div>
         </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden p-2 text-gray-600 hover:text-brand-blue transition-colors rounded-lg hover:bg-gray-100"
+          (click)="toggleMenu()">
+          <i class="fa-solid" [class.fa-bars]="!isMenuOpen" [class.fa-times]="isMenuOpen"></i>
+        </button>
       </div>
-      
-      <!-- Mobile menu button -->
-      <button class="md:hidden p-2 text-gray-600 hover:text-royal-blue" (click)="toggleMenu()">
-        <i class="fa-solid fa-bars" *ngIf="!isMenuOpen"></i>
-        <i class="fa-solid fa-times" *ngIf="isMenuOpen"></i>
-      </button>
     </div>
-    
-    <!-- Mobile menu -->
-    <div class="md:hidden" [class.hidden]="!isMenuOpen">
-      <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-light-grey">
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/')">Accueil</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/a-propos')">À Propos</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/contact')">Contact</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/espace-adherent')" *ngIf="currentUser && currentUser.role === 'adherent'">Tableau de Bord</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/admin')" *ngIf="currentUser && currentUser.role === 'admin'">Administration</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="navigateTo('/connexion')" *ngIf="!currentUser">Connexion</a>
-        <a class="block px-3 py-2 text-gray-700 hover:text-royal-blue" (click)="logout()" *ngIf="currentUser">Déconnexion</a>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="md:hidden overflow-hidden transition-all duration-300 ease-in-out" [class.max-h-0]="!isMenuOpen"
+      [class.max-h-96]="isMenuOpen">
+      <div class="py-4 space-y-1 border-t border-gray-100">
+        <a (click)="navigateTo('/')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Accueil</a>
+        <a (click)="navigateTo('/a-propos')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">À
+          Propos</a>
+        <a (click)="navigateTo('/contact')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Contact</a>
+        <a (click)="navigateTo('/annonces')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Annonces</a>
+        <a (click)="navigateTo('/evenements')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Événements</a>
+        <a (click)="navigateTo('/projets')"
+          class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Projets</a>
+
+        <div class="border-t border-gray-100 my-2 pt-2" *ngIf="authService.currentUser()">
+          <a (click)="navigateTo('/espace-adherent')" *ngIf="authService.currentUser()?.role === 'adherent' || authService.currentUser()?.role === 'admin'"
+            class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Tableau
+            de Bord</a>
+          <a (click)="navigateTo('/admin')"
+            *ngIf="authService.currentUser() && authService.currentUser()?.role === 'admin'"
+            class="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-blue">Administration</a>
+          <a (click)="logout()"
+            class="block px-4 py-3 rounded-lg text-base font-medium text-red-600 hover:bg-red-50">Déconnexion</a>
+        </div>
+
+        <div class="border-t border-gray-100 my-2 pt-4 px-4" *ngIf="!authService.currentUser()">
+          <button (click)="navigateTo('/connexion')"
+            class="w-full py-3 bg-brand-blue text-white rounded-xl font-medium shadow-md">
+            Connexion
+          </button>
+        </div>
       </div>
     </div>
   </div>

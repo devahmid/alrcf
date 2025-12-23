@@ -1,0 +1,11 @@
+# Configuration pour les images d'annonces
+# Autoriser l'accès aux fichiers uploadés
+Order Allow,Deny
+Allow from all
+
+# Désactiver l'exécution de scripts
+<Files "*.php">
+    Order Deny,Allow
+    Deny from all
+</Files>
+

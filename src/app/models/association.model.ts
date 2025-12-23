@@ -3,6 +3,7 @@ export interface News {
   title: string;
   content: string;
   imageUrl?: string;
+  videoUrl?: string;
   author: string;
   authorId: number;
   publishedAt?: Date;
@@ -32,7 +33,9 @@ export interface Event {
 
 export interface ContactMessage {
   id: number;
-  name: string;
+  name?: string; // Pour compatibilité avec l'ancien format
+  firstName?: string; // Format retourné par l'API
+  lastName?: string; // Format retourné par l'API
   email: string;
   phone?: string;
   subject: string;
@@ -66,4 +69,54 @@ export interface Subscription {
   status: 'paid' | 'pending' | 'overdue';
   paymentMethod: 'cash' | 'check' | 'transfer' | 'card';
   reference?: string;
+}
+
+export interface Announcement {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  category: 'service' | 'emploi' | 'vente' | 'location' | 'autre';
+  price?: number;
+  contactPhone?: string;
+  contactEmail?: string;
+  imageUrl?: string;
+  status: 'pending' | 'approved' | 'rejected' | 'expired';
+  isPublic: boolean;
+  approvedBy?: number;
+  approvedAt?: Date;
+  rejectionReason?: string;
+  expiresAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  // Champs joints depuis la base de données
+  firstName?: string;
+  lastName?: string;
+  userEmail?: string;
+  approvedByFirstName?: string;
+  approvedByLastName?: string;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  category: 'culturel' | 'sportif' | 'social' | 'environnement' | 'autre';
+  status: 'planning' | 'in_progress' | 'completed' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  startDate?: Date;
+  endDate?: Date;
+  budget?: number;
+  imageUrl?: string;
+  createdBy: number;
+  assignedTo?: number;
+  progress: number;
+  isPublic: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  // Champs joints depuis la base de données
+  createdByFirstName?: string;
+  createdByLastName?: string;
+  assignedToFirstName?: string;
+  assignedToLastName?: string;
 }

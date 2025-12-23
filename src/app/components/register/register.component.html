@@ -1,0 +1,163 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md" data-aos="fade-down">
+        <div class="w-16 h-16 bg-brand-blue rounded-2xl flex items-center justify-center mx-auto shadow-lg mb-6">
+            <i class="fa-solid fa-user-plus text-white text-2xl"></i>
+        </div>
+        <h2 class="text-center text-3xl font-extrabold text-gray-900">Inscription</h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+            Rejoignez l'association ALRCF
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg" data-aos="fade-up">
+        <div class="bg-white py-8 px-4 shadow-hard rounded-2xl sm:px-10 border border-gray-100">
+            <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+                <!-- Name Fields -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
+                        <div class="mt-1">
+                            <input id="firstName" type="text" formControlName="firstName"
+                                class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-lg py-3 px-4"
+                                [class.border-red-300]="isFieldInvalid('firstName')">
+                        </div>
+                        <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid('firstName')">{{
+                            getFieldError('firstName') }}</p>
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700">Nom</label>
+                        <div class="mt-1">
+                            <input id="lastName" type="text" formControlName="lastName"
+                                class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full shadow-sm sm:text-sm border-gray-300 rounded-lg py-3 px-4"
+                                [class.border-red-300]="isFieldInvalid('lastName')">
+                        </div>
+                        <p class="mt-1 text-xs text-red-600" *ngIf="isFieldInvalid('lastName')">{{
+                            getFieldError('lastName') }}</p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-envelope text-gray-400"></i>
+                        </div>
+                        <input id="email" type="email" formControlName="email"
+                            class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 sm:text-sm border-gray-300 rounded-lg py-3"
+                            placeholder="votre@email.com" [class.border-red-300]="isFieldInvalid('email')">
+                    </div>
+                    <p class="mt-1 text-sm text-red-600" *ngIf="isFieldInvalid('email')">{{ getFieldError('email') }}
+                    </p>
+                </div>
+
+                <!-- Phone & Address (Optional) -->
+                <div class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Téléphone (optionnel)</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-phone text-gray-400"></i>
+                            </div>
+                            <input id="phone" type="tel" formControlName="phone"
+                                class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 shadow-sm sm:text-sm border-gray-300 rounded-lg py-3 px-4">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Adresse (optionnel)</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-map-marker-alt text-gray-400"></i>
+                            </div>
+                            <input id="address" type="text" formControlName="address"
+                                class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 shadow-sm sm:text-sm border-gray-300 rounded-lg py-3 px-4"
+                                placeholder="Votre adresse postale">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                        <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+                            class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 pr-10 sm:text-sm border-gray-300 rounded-lg py-3"
+                            placeholder="Minimum 6 caractères" [class.border-red-300]="isFieldInvalid('password')">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                            (click)="togglePasswordVisibility()">
+                            <i class="fa-solid text-gray-400 hover:text-gray-600"
+                                [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                        </div>
+                    </div>
+                    <p class="mt-1 text-sm text-red-600" *ngIf="isFieldInvalid('password')">{{ getFieldError('password')
+                        }}</p>
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmer le mot de
+                        passe</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-lock text-gray-400"></i>
+                        </div>
+                        <input [type]="showPassword ? 'text' : 'password'" id="confirmPassword"
+                            formControlName="confirmPassword"
+                            class="text-gray-900 bg-white focus:ring-brand-blue focus:border-brand-blue block w-full pl-10 pr-10 sm:text-sm border-gray-300 rounded-lg py-3"
+                            placeholder="Répétez le mot de passe"
+                            [class.border-red-300]="isFieldInvalid('confirmPassword')">
+                    </div>
+                    <p class="mt-1 text-sm text-red-600" *ngIf="isFieldInvalid('confirmPassword')">{{
+                        getFieldError('confirmPassword') }}</p>
+                </div>
+
+                <!-- Error Message -->
+                <div *ngIf="errorMessage" class="rounded-md bg-red-50 p-4 border border-red-200">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa-solid fa-circle-exclamation text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">Erreur</h3>
+                            <div class="mt-1 text-sm text-red-700">
+                                <p>{{ errorMessage }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" [disabled]="isSubmitting"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-brand-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span *ngIf="!isSubmitting">S'inscrire</span>
+                        <span *ngIf="isSubmitting"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>
+                            Inscription...</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-6">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">Déjà inscrit ?</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <button (click)="goToLogin()"
+                        class="text-brand-blue font-medium hover:text-blue-500 transition-colors">
+                        Se connecter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

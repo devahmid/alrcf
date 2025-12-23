@@ -40,6 +40,12 @@
             (click)="setActiveTab('messages')">
             <i class="fas fa-comments me-2"></i>Messages
           </button>
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'announcements'"
+            (click)="setActiveTab('announcements')">
+            <i class="fas fa-bullhorn me-2"></i>Mes Annonces
+          </button>
         </div>
       </div>
     </div>
@@ -430,9 +436,18 @@
                 <div class="message-content">
                   <p class="message-text">{{ message.message }}</p>
                   <div class="message-footer">
-                    <div class="message-date">{{ formatDate(message.createdAt) }}</div>
+                    <div class="message-date">
+                      <i class="fas fa-calendar me-1"></i>Envoyé le {{ formatDate(message.createdAt) }}
+                    </div>
                     <div class="message-reply" *ngIf="message.reply">
-                      <strong>Réponse:</strong> {{ message.reply }}
+                      <div class="reply-header">
+                        <i class="fas fa-reply me-2"></i>
+                        <strong>Réponse reçue</strong>
+                        <span *ngIf="message.repliedAt" class="reply-date">
+                          le {{ formatDate(message.repliedAt) }}
+                        </span>
+                      </div>
+                      <div class="reply-content">{{ message.reply }}</div>
                     </div>
                   </div>
                 </div>
@@ -489,6 +504,210 @@
                 <span *ngIf="isLoading">
                   <i class="fas fa-spinner fa-spin me-2"></i>Envoi...
                 </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Announcements Tab -->
+    <div *ngIf="activeTab === 'announcements'" class="tab-content" data-aos="fade-up">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="announcements-container">
+            <h3 class="section-title">Mes Annonces</h3>
+            
+            <div class="announcements-list" *ngIf="announcements.length > 0">
+              <div class="announcement-card" *ngFor="let announcement of announcements" data-aos="fade-up">
+                <div class="announcement-header">
+                  <h4 class="announcement-title">{{ announcement.title }}</h4>
+                  <div class="announcement-meta">
+                    <span class="announcement-category">{{ getCategoryLabel(announcement.category) }}</span>
+                    <span class="announcement-status" [ngClass]="'status-' + announcement.status">
+                      {{ getStatusLabel(announcement.status) }}
+                    </span>
+                  </div>
+                </div>
+                <div class="announcement-content">
+                  <p class="announcement-description">{{ announcement.description }}</p>
+                  <div class="announcement-footer">
+                    <div class="announcement-price" *ngIf="announcement.price">
+                      Prix: {{ formatPrice(announcement.price) }}
+                    </div>
+                    <div class="announcement-date">{{ formatDate(announcement.createdAt) }}</div>
+                    <div class="announcement-actions">
+                      <button 
+                        class="btn btn-sm btn-outline-primary me-2"
+                        (click)="editAnnouncement(announcement)"
+                        *ngIf="announcement.status !== 'approved'">
+                        <i class="fas fa-edit me-1"></i>Modifier
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="deleteAnnouncement(announcement.id)">
+                        <i class="fas fa-trash me-1"></i>Supprimer
+                      </button>
+                    </div>
+                  </div>
+                  <div class="announcement-rejection" *ngIf="announcement.status === 'rejected' && announcement.rejectionReason">
+                    <strong>Raison du rejet:</strong> {{ announcement.rejectionReason }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="empty-state" *ngIf="announcements.length === 0">
+              <i class="fas fa-bullhorn"></i>
+              <h4>Aucune annonce</h4>
+              <p>Vous n'avez pas encore créé d'annonce.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="announcement-form-container">
+            <h4>{{ editingAnnouncement ? 'Modifier l\'annonce' : 'Nouvelle Annonce' }}</h4>
+            <form [formGroup]="announcementForm" (ngSubmit)="onAnnouncementSubmit()">
+              <div class="mb-3">
+                <label for="announcementTitle" class="form-label">Titre *</label>
+                <input 
+                  type="text" 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(announcementForm, 'title')"
+                  id="announcementTitle" 
+                  formControlName="title"
+                  placeholder="Titre de l'annonce">
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(announcementForm, 'title')">
+                  {{ getFieldError(announcementForm, 'title') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementCategory" class="form-label">Catégorie *</label>
+                <select 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(announcementForm, 'category')"
+                  id="announcementCategory" 
+                  formControlName="category">
+                  <option value="">Sélectionner une catégorie</option>
+                  <option value="service">Service</option>
+                  <option value="emploi">Emploi</option>
+                  <option value="vente">Vente</option>
+                  <option value="location">Location</option>
+                  <option value="autre">Autre</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(announcementForm, 'category')">
+                  {{ getFieldError(announcementForm, 'category') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementPrice" class="form-label">Prix (optionnel)</label>
+                <input 
+                  type="number" 
+                  class="form-control form-control-custom" 
+                  id="announcementPrice" 
+                  formControlName="price"
+                  placeholder="0.00"
+                  step="0.01"
+                  min="0">
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementDescription" class="form-label">Description *</label>
+                <textarea 
+                  class="form-control form-control-custom" 
+                  [class.is-invalid]="isFieldInvalid(announcementForm, 'description')"
+                  id="announcementDescription" 
+                  formControlName="description"
+                  rows="6"
+                  placeholder="Décrivez votre annonce en détail..."></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid(announcementForm, 'description')">
+                  {{ getFieldError(announcementForm, 'description') }}
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementContactPhone" class="form-label">Téléphone de contact</label>
+                <input 
+                  type="tel" 
+                  class="form-control form-control-custom" 
+                  id="announcementContactPhone" 
+                  formControlName="contactPhone"
+                  placeholder="Votre numéro de téléphone">
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementContactEmail" class="form-label">Email de contact</label>
+                <input 
+                  type="email" 
+                  class="form-control form-control-custom" 
+                  id="announcementContactEmail" 
+                  formControlName="contactEmail"
+                  placeholder="Votre email (optionnel)">
+                <small class="form-text text-muted">Si non renseigné, votre email de compte sera utilisé</small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="announcementImage" class="form-label">
+                  <i class="fas fa-image me-2"></i>Image (optionnel)
+                </label>
+                <div class="file-upload-wrapper">
+                  <input 
+                    type="file" 
+                    class="form-control form-control-custom file-input" 
+                    id="announcementImage" 
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                    (change)="onAnnouncementImageSelected($event)">
+                </div>
+                <small class="form-text text-muted d-block mt-2">
+                  <i class="fas fa-info-circle me-1"></i>Formats acceptés: JPG, PNG, GIF, WEBP (max 5MB)
+                </small>
+                
+                <!-- Image Preview -->
+                <div *ngIf="announcementImageUrl" class="mt-3">
+                  <div class="position-relative d-inline-block">
+                    <img [src]="announcementImageUrl" alt="Aperçu" class="img-thumbnail announcement-image-preview">
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-image-btn"
+                      (click)="removeAnnouncementImage()"
+                      title="Supprimer l'image">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="d-flex gap-2">
+                <button 
+                  type="submit" 
+                  class="btn btn-custom flex-fill"
+                  [disabled]="isLoading">
+                  <span *ngIf="!isLoading">
+                    <i class="fas fa-paper-plane me-2"></i>{{ editingAnnouncement ? 'Mettre à jour' : 'Publier' }}
+                  </span>
+                  <span *ngIf="isLoading">
+                    <i class="fas fa-spinner fa-spin me-2"></i>{{ editingAnnouncement ? 'Mise à jour...' : 'Publication...' }}
+                  </span>
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary"
+                  (click)="cancelEdit()"
+                  *ngIf="editingAnnouncement"
+                  [disabled]="isLoading">
+                  Annuler
+                </button>
+              </div>
+              
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary w-100 mt-2"
+                (click)="cancelEdit()"
+                *ngIf="editingAnnouncement">
+                Annuler
               </button>
             </form>
           </div>
