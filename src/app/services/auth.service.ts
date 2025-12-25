@@ -112,4 +112,16 @@ export class AuthService {
     this.currentUserSig.set(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}auth/forgot-password.php`, { email });
+  }
+
+  verifyResetToken(token: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}auth/reset-password.php?token=${token}`);
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}auth/reset-password.php`, { token, password });
+  }
 }

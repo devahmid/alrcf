@@ -13,6 +13,8 @@ import { AnnouncementsComponent } from './components/announcements/announcements
 import { NewsComponent } from './components/news/news.component';
 import { EventsComponent } from './components/events/events.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'projets', component: ProjectsComponent },
   { path: 'connexion', component: LoginComponent },
   { path: 'inscription', component: RegisterComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   {
     path: 'espace-adherent',
     component: AdherentSpaceComponent,

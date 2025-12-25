@@ -22,6 +22,8 @@ import { AnnouncementsComponent } from './components/announcements/announcements
 import { NewsComponent } from './components/news/news.component';
 import { EventsComponent } from './components/events/events.component';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ModalComponent } from './components/modal/modal.component';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -43,6 +45,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     NewsComponent,
     EventsComponent,
     ProjectsComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
     ModalComponent
   ],
   imports: [

@@ -23,3 +23,4 @@ CREATE TABLE IF NOT EXISTS projects (
     INDEX idx_createdBy (createdBy)
 );
 
+

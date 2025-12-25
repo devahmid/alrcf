@@ -57,6 +57,12 @@ if (empty($segments[0])) {
                     case 'profile':
                         include 'auth/profile.php';
                         break;
+                    case 'forgot-password':
+                        include 'auth/forgot-password.php';
+                        break;
+                    case 'reset-password':
+                        include 'auth/reset-password.php';
+                        break;
                     default:
                         http_response_code(404);
                         echo json_encode(['error' => 'Endpoint non trouvé']);

@@ -31,3 +31,4 @@ CREATE INDEX IF NOT EXISTS idx_announcements_status ON announcements(status);
 CREATE INDEX IF NOT EXISTS idx_announcements_category ON announcements(category);
 CREATE INDEX IF NOT EXISTS idx_announcements_public ON announcements(isPublic, status);
 
+
